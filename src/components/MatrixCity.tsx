@@ -7,8 +7,11 @@ import { useControls } from "leva"
 
 export default function MatrixCity( { model, ...props } : { model: "city1" | "city2" } ) {
 	const materialRef = useRef<MatrixMaterial>(null)
-	const city1 = useGLTF("/city.glb")
-	const city2 = useGLTF("/city.glb")
+	const city1 = useGLTF("/City1.glb")
+
+	console.log(city1)
+
+	const city2 = useGLTF("/City1.glb")
 
 	const geometry = useMemo(() => {
 		return (model == "city1" && city1.scene.children[0] instanceof Mesh && city1.scene.children[0].geometry)

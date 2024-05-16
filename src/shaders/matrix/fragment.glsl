@@ -7,7 +7,7 @@ varying vec3 vNormal;
 varying vec2 vUV;
 
 #include ../lib/simplexNoise2D.glsl
-#include ../lib/simplexNoise3D.glsl
+//#include ../lib/simplexNoise3D.glsl
 
 void main(){
 	vec2 uScale = vec2(70, .5);
