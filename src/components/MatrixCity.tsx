@@ -1,46 +1,52 @@
-import { useMemo, useRef } from "react"
-import { MatrixMaterial } from "../materials/MatrixMaterial"
-import { useGLTF } from "@react-three/drei"
-import { Mesh} from "three"
-import { useFrame } from "@react-three/fiber"
-import { useControls } from "leva"
+import { useRef } from "react";
+import { MatrixMaterial } from "../materials/MatrixMaterial";
+import { useGLTF } from "@react-three/drei";
+import { Mesh } from "three";
+import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 
-export default function MatrixCity( { model, ...props } : { model: "city1" | "city2" } ) {
-	const materialRef = useRef<MatrixMaterial>(null)
-	const city1 = useGLTF("/City1.glb")
+const CITIES = {
+  city1: "/City1.glb",
+  city2: "/City1.glb",
+};
 
-	console.log(city1)
+(Object.keys(CITIES) as Array<keyof typeof CITIES>).forEach((key) =>
+  useGLTF.preload(CITIES[key]),
+);
 
-	const city2 = useGLTF("/City1.glb")
+export default function MatrixCity({
+  model,
+  ...props
+}: {
+  model: keyof typeof CITIES;
+}) {
+  const materialRef = useRef<MatrixMaterial>(null);
+  const cityModel = useGLTF(CITIES[model]);
 
-	const geometry = useMemo(() => {
-		return (model == "city1" && city1.scene.children[0] instanceof Mesh && city1.scene.children[0].geometry)
-		|| (model == "city2" && city2.scene.children[0] instanceof Mesh && city2.scene.children[0].geometry)
-	}, [city1, city2, model])
-	
-	/**
-	 * CONTROLS
-	 */
-	const {materialSpeed, color} = useControls("Matrix City", {
-		materialSpeed: {value: 1, min: 0, max: 20},
-		//color: {value: "#339919"}
-		color: {value: "#1e56ff"}
-	})
+  const geometry =
+    cityModel.scene.children[0] instanceof Mesh &&
+    cityModel.scene.children[0].geometry;
 
-	/**
-	 * UPDATE
-	 */
-	useFrame((_, delta)=>{
-		if(materialRef.current)
-			materialRef.current.uniforms.uTime.value += delta * materialSpeed; 
-	})
+  /**
+   * CONTROLS
+   */
+  const { materialSpeed, color } = useControls("Matrix City", {
+    materialSpeed: { value: 1, min: 0, max: 20 },
+    //color: {value: "#339919"}
+    color: { value: "#1e56ff" },
+  });
 
-	return (
-		<mesh
-			geometry={geometry}
-			{...props}
-		>
-			<matrixMaterial ref={materialRef} color={color} />
-		</mesh>
-	)
+  /**
+   * UPDATE
+   */
+  useFrame((_, delta) => {
+    if (materialRef.current)
+      materialRef.current.uniforms.uTime.value += delta * materialSpeed;
+  });
+
+  return (
+    <mesh geometry={geometry} {...props}>
+      <matrixMaterial ref={materialRef} color={color} />
+    </mesh>
+  );
 }

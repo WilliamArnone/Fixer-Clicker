@@ -1,26 +1,28 @@
-import { OrbitControls } from "@react-three/drei"
+import { OrbitControls } from "@react-three/drei";
 
-import { Bloom, EffectComposer, ToneMapping } from "@react-three/postprocessing";
+import {
+  Bloom,
+  EffectComposer,
+  ToneMapping,
+} from "@react-three/postprocessing";
 import MatrixCity from "./MatrixCity";
 
 export default function Experience() {
-
-	return (
+  return (
     <>
       <OrbitControls makeDefault />
 
-			<MatrixCity 
-				model="city1"
-				rotation-x={-Math.PI * 0.5 * 0}
-				position-y={0}
-			/>
+      <MatrixCity
+        model="city1"
+        rotation-x={-Math.PI * 0.5 * 0}
+        position-y={0}
+      />
 
-			<EffectComposer>
+      <EffectComposer>
+        <Bloom luminanceThreshold={1.1} mipmapBlur />
 
-				<Bloom luminanceThreshold={1.1} mipmapBlur />
-
-				<ToneMapping />
-			</EffectComposer>
+        <ToneMapping />
+      </EffectComposer>
     </>
   );
 }

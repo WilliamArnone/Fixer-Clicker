@@ -55,7 +55,6 @@ void main(){
 	alpha += fresnel;
 	alpha *= amount;
 
-
 	//initial animation
 	alpha *= 1.0 - step(uTime - 10.0, position.z);
 	alpha = max(alpha, 0.0);

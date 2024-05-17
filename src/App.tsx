@@ -9,7 +9,7 @@ import { Leva } from "leva";
 function App() {
   return (
     <div className="absolute w-full h-screen p-0 top-0 left-0 ">
-      <Leva oneLineLabels  />
+      <Leva oneLineLabels />
 
       <Canvas
         camera={{
