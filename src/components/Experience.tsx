@@ -10,6 +10,9 @@ import MatrixCity from "./MatrixCity";
 export default function Experience() {
   return (
     <>
+      <color attach={"background"} args={["#1c1c1c"]} />
+      <fog attach={"fog"} args={["#1c1c1c", 1, 20]} />
+
       <OrbitControls makeDefault />
 
       <MatrixCity

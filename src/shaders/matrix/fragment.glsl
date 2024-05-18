@@ -8,6 +8,7 @@ varying vec2 vUV;
 
 #include ../lib/simplexNoise2D.glsl
 //#include ../lib/simplexNoise3D.glsl
+#include <fog_pars_fragment>
 
 void main(){
 	vec2 uScale = vec2(70, .5);
@@ -66,7 +67,12 @@ void main(){
 	vec3 col = uColor / (1.0 - intensity);
 	col = clamp(col, 0.0, 1.3);
 	// gl_FragColor = vec4(col, alpha * (amount) * intensity);
-	gl_FragColor = vec4(col * alpha, alpha);
+	gl_FragColor = vec4(col, alpha * (amount) * intensity);
+
+	#include <tonemapping_fragment>
+	#include <colorspace_fragment>
+	#include <fog_fragment>
+	#include <premultiplied_alpha_fragment>
 }
 
 
