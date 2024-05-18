@@ -6,8 +6,8 @@ import {
   Uniform,
 } from "three";
 
-import fragmentShader from "../shaders/matrix/fragment.glsl";
-import vertexShader from "../shaders/matrix/vertex.glsl";
+import fragmentShader from "./shaders/matrix/fragment.glsl";
+import vertexShader from "./shaders/matrix/vertex.glsl";
 
 export class MatrixMaterial extends ShaderMaterial {
   constructor() {

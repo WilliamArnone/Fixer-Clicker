@@ -6,18 +6,16 @@ import Experience from "./components/Experience";
 import "./App.css";
 import { Leva } from "leva";
 
+const DEBUG = window.location.hash === "#debug";
+
 function App() {
   return (
     <div className="absolute w-full h-screen p-0 top-0 left-0 ">
-      <Leva oneLineLabels />
+      <Leva oneLineLabels hidden={!DEBUG} />
 
-      <Canvas
-        camera={{
-          position: [0, 0, 3],
-        }}
-      >
+      <Canvas>
         <Experience />
-        <Perf position={"top-left"} />
+        {DEBUG && <Perf position={"top-left"} />}
       </Canvas>
     </div>
   );
