@@ -32,7 +32,7 @@ void main(){
 	//FRESNEL
 	float fresnel = smoothstep(0.4, 1.0, 1.0 - abs(dot(cameraDIr, normal)));
 	fresnel = pow(fresnel, 3.0);
-	fresnel = clamp(fresnel, 0.0, 1.4);
+	fresnel = clamp(fresnel, 0.0, 1.8);
 
 
 	//Squares
@@ -65,7 +65,7 @@ void main(){
 	//if(alpha<0.0) discard;
 
 	vec3 col = uColor / (1.0 - intensity);
-	col = clamp(col, 0.0, 1.3);
+	col = clamp(col, 0.0, 1.6);
 	// gl_FragColor = vec4(col, alpha * (amount) * intensity);
 	gl_FragColor = vec4(col, alpha * (amount) * intensity);
 

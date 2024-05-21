@@ -16,9 +16,11 @@ const CITIES = {
 
 export default function MatrixCity({
   model,
+  color,
   ...props
 }: {
   model: keyof typeof CITIES;
+  color: string;
 }) {
   const materialRef = useRef<MatrixMaterial>(null);
   const cityModel = useGLTF(CITIES[model]);
@@ -30,10 +32,8 @@ export default function MatrixCity({
   /**
    * CONTROLS
    */
-  const { materialSpeed, color } = useControls("Matrix City", {
+  const { materialSpeed } = useControls("Matrix City", {
     materialSpeed: { value: 1, min: 0, max: 20 },
-    //color: {value: "#339919"}
-    color: { value: "#1e56ff" },
   });
 
   /**

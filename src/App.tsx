@@ -10,10 +10,10 @@ const DEBUG = window.location.hash === "#debug";
 
 function App() {
   return (
-    <div className="absolute w-full h-screen p-0 top-0 left-0 ">
-      <Leva oneLineLabels hidden={!DEBUG} />
+    <div className="absolute w-full h-svh p-0 top-0 left-0 ">
+      <Leva oneLineLabels collapsed hidden={!DEBUG} />
 
-      <Canvas>
+      <Canvas gl={{ localClippingEnabled: true }}>
         <Experience />
         {DEBUG && <Perf position={"top-left"} />}
       </Canvas>

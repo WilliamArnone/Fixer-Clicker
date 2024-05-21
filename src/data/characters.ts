@@ -1,4 +1,9 @@
-export const characters = [
+export type RunnerData = {
+  name: string;
+  description: string;
+};
+
+export const characters: RunnerData[] = [
   {
     name: "Echo Equinox",
     description:

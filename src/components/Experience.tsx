@@ -4,20 +4,18 @@ import {
   ToneMapping,
 } from "@react-three/postprocessing";
 import Game from "./Game";
-import Camera from "./Camera";
+import { BG_COLOR } from "../data/theme";
 
 export default function Experience() {
   return (
     <>
-      <color attach={"background"} args={["#1c1c1c"]} />
-      <fog attach={"fog"} args={["#1c1c1c", 1, 20]} />
+      <color attach={"background"} args={[BG_COLOR]} />
+      <fog attach={"fog"} args={[BG_COLOR, 1, 20]} />
 
-      <Camera />
       <Game />
 
       <EffectComposer>
         <Bloom luminanceThreshold={1.1} mipmapBlur />
-
         <ToneMapping />
       </EffectComposer>
     </>
