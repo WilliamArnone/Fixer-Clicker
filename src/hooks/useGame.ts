@@ -3,7 +3,7 @@ import { missionNames } from "../data/missionNames";
 import { randInt } from "three/src/math/MathUtils.js";
 import { RunnerData, characters } from "../data/characters";
 
-type GamePhase = "intro" | "game";
+type GamePhase = "loading" | "intro" | "game";
 //type MissionState = "idle" | "hover" | "selected" | "assigned";
 
 interface GameState {
@@ -12,6 +12,7 @@ interface GameState {
   runners: RunnerData[];
   missionPool: string[];
   missions: string[];
+  glitch: boolean;
 }
 
 interface GameAction {
@@ -20,6 +21,7 @@ interface GameAction {
   removeRunner: (runner: RunnerData) => void;
   addMission: () => string;
   removeMission: (mission: string) => void;
+  setGlitch: (glitch: boolean) => void;
 }
 
 const createNewAvalableRunner = (runners: RunnerData[]) =>
@@ -35,6 +37,7 @@ export const useGame = create<GameState & GameAction>((set) => ({
   runners: [],
   missionPool: [...missionNames],
   missions: [],
+  glitch: false,
 
   setPhase: (newPhase: GamePhase) => set(() => ({ phase: newPhase })),
 
@@ -111,4 +114,8 @@ export const useGame = create<GameState & GameAction>((set) => ({
     set((state) => ({
       missions: state.missions.filter((miss) => miss !== mission),
     })),
+
+  setGlitch: (glitch) => {
+    set((_) => ({ glitch: glitch }));
+  },
 }));

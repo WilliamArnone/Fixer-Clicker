@@ -1,27 +1,79 @@
 import { a } from "@react-spring/three";
-import { Text, meshBounds } from "@react-three/drei";
-import { DoubleSide } from "three";
+import { Text } from "@react-three/drei";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
-import { forwardRef, useCallback, useState } from "react";
+import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
 import { useSpring } from "@react-spring/web";
 import { RunnerData } from "../data/characters";
-import { ThreeEvent } from "@react-three/fiber";
+import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { MissionRef } from "./MissionButton";
+import { Mesh, PlaneGeometry } from "three";
+import { useGame } from "../hooks/useGame";
+import {
+  PlayButtonConfirm,
+  PlayButtonHover,
+  PlayMissionCompleted,
+} from "../data/audioFiles";
 
 type RunnerButtonProps = {
+  index: number;
   data: RunnerData;
   style: ButtonAnimationStyles;
 };
 
 type RunnerPhase = "idle" | "hover" | "active";
 
+const progressBarGeometry = new PlaneGeometry(1, 1);
+progressBarGeometry.translate(0.5, 0, 0);
+
+const PROGRESS_SPEED = 1;
+const MAX_PROGRESS = 10;
+
 const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
-  ({ style, data }, ref) => {
+  ({ index, style, data }, ref) => {
     const [phase, setPhase] = useState<RunnerPhase>("idle");
     const [myMissions, setMyMissions] = useState<MissionRef[]>([]);
+    const myColor = useMemo(
+      () => `hsl(${Math.floor((index * 110) % 360)}, 100%, 60%)`,
+      [],
+    );
+    console.log(myColor);
+    const removeMission = useGame((state) => state.removeMission);
 
     const interactionStyle = useSpring({
-      xOffset: phase === "idle" ? 0 : phase === "hover" ? -2 : -5,
+      xOffset: phase === "idle" ? 0 : phase === "hover" ? -1.5 : -2,
+    });
+
+    /**
+     * LOGIC
+     */
+
+    const progressBar = useRef<Mesh>(null);
+    useFrame((_, delta) => {
+      if (!progressBar === null || progressBar.current === null) return;
+
+      if (phase !== "active") {
+        progressBar.current.scale.x = 0;
+        return;
+      }
+
+      let progress = progressBar.current.scale.x + delta * PROGRESS_SPEED;
+
+      if (progress >= MAX_PROGRESS) {
+        progress = 0;
+
+        const missions = [...myMissions];
+        const missionRef = missions[0];
+        missions.splice(0, 1);
+
+        removeMission(missionRef.mission);
+        PlayMissionCompleted();
+
+        if (missions.length === 0) setPhase("idle");
+
+        setMyMissions(missions);
+      }
+
+      progressBar.current.scale.x = progress;
     });
 
     /**
@@ -30,6 +82,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
 
     const pointerEnter = useCallback((e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
+      if (phase === "idle") PlayButtonHover();
       setPhase((phase: RunnerPhase) => (phase === "idle" ? "hover" : phase));
     }, []);
 
@@ -51,40 +104,47 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
       ) {
         setMyMissions([...ref.current]);
         setPhase("active");
+        PlayButtonConfirm();
         for (const missionRef of ref.current) {
           missionRef.setPhase("assigned");
-          missionRef.setColor("#ff0000");
+          missionRef.setColor(myColor);
         }
         ref.current = [];
       }
     }, []);
 
     return (
-      <a.mesh
-        rotation-x={-0.1}
+      <a.group
         position-x={style.xOffset}
         position-y={style.yOffset}
         scale={0.1}
-        onPointerEnter={pointerEnter}
-        onPointerLeave={pointerLeave}
-        onPointerDown={click}
       >
-        <planeGeometry args={[15, 4.5]} />
-        <meshBasicMaterial visible={false} />
+        <mesh onPointerEnter={pointerEnter} onPointerLeave={pointerLeave}>
+          <planeGeometry args={[15, 4.5]} />
+          <meshBasicMaterial visible={false} />
+        </mesh>
 
-        <a.mesh position-x={interactionStyle.xOffset}>
+        <a.mesh position-x={interactionStyle.xOffset} onPointerDown={click}>
           <planeGeometry args={[15, 4.5]} />
           <a.meshBasicMaterial
             transparent
-            side={DoubleSide}
+            color={myColor}
             opacity={style.opacity}
           />
           <Text fontSize={1} maxWidth={13} position-z={0.1}>
-            <a.meshBasicMaterial color={"red"} opacity={style.opacity} />
+            <a.meshBasicMaterial color={"white"} opacity={style.opacity} />
             {data.name}
           </Text>
+          <mesh
+            scale={[0, 1, 1]}
+            ref={progressBar}
+            position={[-5.5, -2, 1]}
+            geometry={progressBarGeometry}
+          >
+            <meshBasicMaterial color={"white"} />
+          </mesh>
         </a.mesh>
-      </a.mesh>
+      </a.group>
     );
   },
 );

@@ -51,20 +51,22 @@ export default function Game() {
       </MyCamera>
 
       {phase === "game" && (
-        <>
+        <group rotation-x={-0.2}>
           <MissionList
+            rotation-y={0.1}
             position-y={buttonHeight}
             position-x={-deltaPosition}
             name="Missions"
             ref={selectedMissions}
           />
           <RunnerList
+            rotation-y={-0.1}
             position-y={buttonHeight}
             position-x={deltaPosition}
             name="Runners"
             ref={selectedMissions}
           />
-        </>
+        </group>
       )}
 
       <MatrixCity

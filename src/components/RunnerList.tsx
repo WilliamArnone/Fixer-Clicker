@@ -23,17 +23,17 @@ const RunnerList = forwardRef<MissionRef[], RunnerListProps>(
 
     return (
       <group {...props}>
-        <Text
-          rotation-x={-0.1}
-          position={titlePosition}
-          scale={0.1}
-          fontSize={2}
-        >
+        <Text position={titlePosition} scale={0.1} fontSize={2}>
           {name}
         </Text>
         <group position={buttonStartPosition}>
-          {transitions((style, runners) => (
-            <RunnerButton data={runners} style={style} ref={ref} />
+          {transitions((style, runners, _, index) => (
+            <RunnerButton
+              index={index}
+              data={runners}
+              style={style}
+              ref={ref}
+            />
           ))}
         </group>
       </group>

@@ -1,10 +1,6 @@
-import {
-  Bloom,
-  EffectComposer,
-  ToneMapping,
-} from "@react-three/postprocessing";
 import Game from "./Game";
 import { BG_COLOR } from "../data/theme";
+import PostProcess from "./PostProcess";
 
 export default function Experience() {
   return (
@@ -13,11 +9,7 @@ export default function Experience() {
       <fog attach={"fog"} args={[BG_COLOR, 1, 20]} />
 
       <Game />
-
-      <EffectComposer>
-        <Bloom luminanceThreshold={1.1} mipmapBlur />
-        <ToneMapping />
-      </EffectComposer>
+      <PostProcess />
     </>
   );
 }

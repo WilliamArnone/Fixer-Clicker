@@ -7,6 +7,7 @@ export type ButtonAnimationStyles = {
 };
 
 export const DISTANCE_BETWEEN_BUTTON = 0.5;
+export const DISTANCE_ENTER_BUTTON = 0.2;
 
 export default function useButtonsAnimations(
   buttons: any[],
@@ -14,7 +15,7 @@ export default function useButtonsAnimations(
 ) {
   return useTransition<any, ButtonAnimationStyles>(buttons, {
     from: (_, index) => ({
-      xOffset: 2 * direction,
+      xOffset: DISTANCE_ENTER_BUTTON * direction,
       yOffset: -index * DISTANCE_BETWEEN_BUTTON,
       opacity: 0,
     }),
@@ -28,7 +29,7 @@ export default function useButtonsAnimations(
       yOffset: -index * DISTANCE_BETWEEN_BUTTON,
     }),
     leave: {
-      xOffset: 2 * direction,
+      xOffset: DISTANCE_ENTER_BUTTON * direction,
       opacity: 0,
     },
   });

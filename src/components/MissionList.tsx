@@ -22,12 +22,7 @@ const MissionList = forwardRef<MissionRef[], MissionListProps>(
 
     return (
       <group {...props}>
-        <Text
-          rotation-x={-0.1}
-          position={titlePosition}
-          scale={0.1}
-          fontSize={2}
-        >
+        <Text position={titlePosition} scale={0.1} fontSize={2}>
           {name}
         </Text>
         <group position={buttonStartPosition}>
