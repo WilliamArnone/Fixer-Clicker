@@ -1,9 +1,13 @@
-import { a } from "@react-spring/three";
-import { Text } from "@react-three/drei";
-import { DoubleSide } from "three";
+import { a, animated, useSpring } from "@react-spring/three";
+import { Float, Text, useTexture } from "@react-three/drei";
+import {
+  AdditiveBlending,
+  AlwaysDepth,
+  DoubleSide,
+  PlaneGeometry,
+} from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useState } from "react";
-import { useSpring } from "@react-spring/web";
 import { ThreeEvent } from "@react-three/fiber";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import {
@@ -11,6 +15,7 @@ import {
   PlayButtonHover,
   PlayButtonSelect,
 } from "../data/audioFiles";
+import { FONT_DESCRIPTION, FONT_DESCRIPTION_BOLD } from "../data/fonts";
 
 export type MissionRef = {
   mission: string;
@@ -25,6 +30,12 @@ type MissionButtonProps = {
 
 type MissionPhase = "idle" | "hover" | "selected" | "assigned";
 
+const AText = animated(Text);
+
+const baseGeometry = new PlaneGeometry(15, 4.5);
+const overlayCornerGeometry = new PlaneGeometry(2, 2);
+const overlayAimGeometry = new PlaneGeometry(3, 3);
+
 const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
   ({ style, mission }, ref) => {
     const [phase, setPhase] = useState<MissionPhase>("idle");
@@ -32,7 +43,19 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
 
     const interactionStyle = useSpring({
       xOffset: phase === "idle" ? 0 : phase === "hover" ? 2 : 3.5,
+      overlay1Z: phase === "hover" ? 0.6 : phase === "idle" ? 1 : 0.1,
+      overlay2Z: phase === "hover" ? 0.9 : phase === "idle" ? 1.2 : 0.3,
+      overlay3Z: phase === "hover" ? 1 : phase === "idle" ? 1.5 : 0.5,
     });
+
+    /**
+     * TEXTURES
+     */
+
+    const base1Texture = useTexture("/img/Mission/Base1.png");
+    const base2Texture = useTexture("/img/Mission/Base2.png");
+    const overlayCornerTexture = useTexture("/img/Mission/OverlayCorner.png");
+    const overlayAimTexture = useTexture("/img/Mission/OverlayAim.png");
 
     /**
      * EVENT HANDLERS
@@ -84,23 +107,103 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
         position-y={style.yOffset}
         scale={0.1}
       >
-        <mesh onPointerEnter={pointerEnter} onPointerLeave={pointerLeave}>
-          <planeGeometry args={[15, 4.5]} />
+        <mesh
+          onPointerEnter={pointerEnter}
+          onPointerLeave={pointerLeave}
+          geometry={baseGeometry}
+        >
           <meshBasicMaterial visible={false} />
         </mesh>
 
-        <a.mesh position-x={interactionStyle.xOffset} onPointerUp={click}>
-          <planeGeometry args={[15, 4.5]} />
+        <a.mesh
+          position-x={interactionStyle.xOffset}
+          onPointerUp={click}
+          geometry={baseGeometry}
+        >
           <a.meshBasicMaterial
             transparent
             side={DoubleSide}
             opacity={style.opacity}
             color={color}
+            depthWrite={false}
+            map={base1Texture}
           />
-          <Text fontSize={1} maxWidth={13} position-z={0.1}>
+
+          <Float rotationIntensity={0} speed={3} floatingRange={[0, 0.2]}>
+            <a.mesh
+              geometry={overlayCornerGeometry}
+              position={[-6.4, 1.3, 0]}
+              position-z={interactionStyle.overlay3Z}
+            >
+              <a.meshBasicMaterial
+                transparent
+                side={DoubleSide}
+                opacity={style.opacity}
+                color={color}
+                depthWrite={false}
+                map={overlayCornerTexture}
+              />
+            </a.mesh>
+          </Float>
+
+          <Float rotationIntensity={0} speed={3} floatingRange={[0, 0.2]}>
+            <a.mesh
+              geometry={overlayCornerGeometry}
+              position={[-6.4, -1.3, 0]}
+              rotation-z={Math.PI / 2}
+              position-z={interactionStyle.overlay3Z}
+            >
+              <a.meshBasicMaterial
+                transparent
+                side={DoubleSide}
+                opacity={style.opacity}
+                color={color}
+                depthWrite={false}
+                map={overlayCornerTexture}
+              />
+            </a.mesh>
+          </Float>
+
+          <a.mesh
+            geometry={overlayAimGeometry}
+            position={[6.4, 1, 0]}
+            position-z={2}
+            scale={1.5}
+          >
+            <a.meshBasicMaterial
+              transparent
+              side={DoubleSide}
+              depthWrite={false}
+              opacity={style.opacity}
+              color={color}
+              map={overlayAimTexture}
+            />
+            <a.mesh
+              geometry={overlayAimGeometry}
+              position-z={interactionStyle.overlay1Z}
+              scale={0.5}
+            >
+              <a.meshBasicMaterial
+                transparent
+                side={DoubleSide}
+                depthWrite={false}
+                opacity={style.opacity}
+                color={color}
+                map={overlayAimTexture}
+              />
+            </a.mesh>
+          </a.mesh>
+
+          <AText
+            fontSize={1}
+            maxWidth={13}
+            font={FONT_DESCRIPTION_BOLD}
+            position-z={interactionStyle.overlay2Z}
+            fontWeight={3000}
+          >
             <a.meshBasicMaterial color={"white"} opacity={style.opacity} />
             {mission}
-          </Text>
+          </AText>
         </a.mesh>
       </a.group>
     );

@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef } from "react";
 import MyCamera from "./MyCamera";
 import useGameController from "../hooks/useGameController";
 import { MissionRef } from "./MissionButton";
+import { OrbitControls } from "@react-three/drei";
 
 export default function Game() {
   /**

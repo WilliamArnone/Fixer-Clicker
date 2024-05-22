@@ -19,7 +19,7 @@ export default function PostProcess() {
 
   const { bloomTreshold, bloomIntensity } = useControls("PostProcess", {
     bloomTreshold: { value: 0.9, min: 0.1, max: 2.0 },
-    bloomIntensity: { value: 1, min: 0.1, max: 2.0 },
+    bloomIntensity: { value: 0.3, min: 0.1, max: 2.0 },
   });
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function PostProcess() {
       <Glitch
         //delay={[5, 10]} // min and max glitch delay
         //duration={[0.3, 0.5]} // min and max glitch duration
-        strength={[0.3, 1.0]} // min and max glitch strength
+        strength={[0.3, 1.0] as any} // min and max glitch strength
         //mode={GlitchMode.SPORADIC} // glitch mode
         active={glitch}
         ratio={1} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
