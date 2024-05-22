@@ -14,7 +14,7 @@ export default function MyCamera(props: MyCameraProps) {
     },
     targetPosition: { value: { x: 0, y: 1.5, z: -3 } },
     moveFactor: {
-      value: { x: 1, y: 0.3 },
+      value: { x: 1, y: 0.1 },
     },
   });
 

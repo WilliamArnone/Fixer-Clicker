@@ -1,5 +1,5 @@
 import {
-  Bloom,
+  //Bloom,
   EffectComposer,
   Glitch,
   ToneMapping,
@@ -7,7 +7,7 @@ import {
 import { useGame } from "../hooks/useGame";
 import { useEffect, useRef } from "react";
 import { PlayMissionFailed } from "../data/audioFiles";
-import { useControls } from "leva";
+//import { useControls } from "leva";
 
 export default function PostProcess() {
   const missions = useGame((state) => state.missions);
@@ -17,10 +17,10 @@ export default function PostProcess() {
   ]);
   const prevMissions = useRef(-1);
 
-  const { bloomTreshold, bloomIntensity } = useControls("PostProcess", {
-    bloomTreshold: { value: 0.9, min: 0.1, max: 2.0 },
-    bloomIntensity: { value: 0.3, min: 0.1, max: 2.0 },
-  });
+  // const { bloomTreshold, bloomIntensity } = useControls("PostProcess", {
+  //   bloomTreshold: { value: 0.9, min: 0.1, max: 2.0 },
+  //   bloomIntensity: { value: 0.3, min: 0.1, max: 2.0 },
+  // });
 
   useEffect(() => {
     let clearGlitch;
@@ -40,11 +40,11 @@ export default function PostProcess() {
 
   return (
     <EffectComposer>
-      <Bloom
+      {/* <Bloom
         luminanceThreshold={bloomTreshold}
         intensity={bloomIntensity}
         mipmapBlur
-      />
+      /> */}
       <Glitch
         //delay={[5, 10]} // min and max glitch delay
         //duration={[0.3, 0.5]} // min and max glitch duration
