@@ -24,7 +24,7 @@ export default function MatrixCity({
   color: string;
 }) {
   const materialRef = useRef<MatrixMaterial>(null);
-  const materialSpeedRef = useRef<number>(0);
+  const materialSpeedRef = useRef<number>(18);
   const glitch = useGame((state) => state.glitch);
   const phase = useGame((state) => state.phase);
   const cityModel = useGLTF(CITIES[model]);
@@ -44,6 +44,8 @@ export default function MatrixCity({
    * UPDATE
    */
   useFrame((_, delta) => {
+    if (phase === "loading") return;
+
     let speedTarget = 0;
 
     if (phase === "game")

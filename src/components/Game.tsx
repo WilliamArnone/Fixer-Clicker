@@ -41,7 +41,7 @@ export default function Game() {
 
   return (
     <>
-      <MyCamera makeDefault fov={70}>
+      <MyCamera>
         {phase === "intro" && (
           <animated.mesh position-z={-1} scale={10}>
             <planeGeometry />
