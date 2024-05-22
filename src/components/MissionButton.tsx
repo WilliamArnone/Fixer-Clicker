@@ -1,11 +1,6 @@
 import { a, animated, useSpring } from "@react-spring/three";
 import { Float, Text, useTexture } from "@react-three/drei";
-import {
-  AdditiveBlending,
-  AlwaysDepth,
-  DoubleSide,
-  PlaneGeometry,
-} from "three";
+import { DoubleSide, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
@@ -15,7 +10,7 @@ import {
   PlayButtonHover,
   PlayButtonSelect,
 } from "../data/audioFiles";
-import { FONT_DESCRIPTION, FONT_DESCRIPTION_BOLD } from "../data/fonts";
+import { FONT_DESCRIPTION_BOLD } from "../data/fonts";
 
 export type MissionRef = {
   mission: string;
@@ -53,7 +48,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
      */
 
     const base1Texture = useTexture("/img/Mission/Base1.png");
-    const base2Texture = useTexture("/img/Mission/Base2.png");
+    //const base2Texture = useTexture("/img/Mission/Base2.png");
     const overlayCornerTexture = useTexture("/img/Mission/OverlayCorner.png");
     const overlayAimTexture = useTexture("/img/Mission/OverlayAim.png");
 

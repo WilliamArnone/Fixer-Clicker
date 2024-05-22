@@ -1,7 +1,7 @@
 import { a, animated, useSpring } from "@react-spring/three";
 import { Float, Text, useTexture } from "@react-three/drei";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
-import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useRef, useState } from "react";
 import { RunnerData } from "../data/characters";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { MissionRef } from "./MissionButton";
@@ -36,10 +36,10 @@ const PROGRESS_SPEED = 1;
 const MAX_PROGRESS = 10;
 
 const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
-  ({ index, style, data }, ref) => {
+  ({ style, data }, ref) => {
     const [phase, setPhase] = useState<RunnerPhase>("idle");
     const [myMissions, setMyMissions] = useState<MissionRef[]>([]);
-    const [myColor, setMyColor] = useState(
+    const [myColor, _] = useState(
       () => `hsl(${Math.floor(Math.random() * 240 + 60)}, 100%, 60%)`,
     );
 

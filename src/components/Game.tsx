@@ -9,7 +9,6 @@ import { useEffect, useMemo, useRef } from "react";
 import MyCamera from "./MyCamera";
 import useGameController from "../hooks/useGameController";
 import { MissionRef } from "./MissionButton";
-import { OrbitControls } from "@react-three/drei";
 
 export default function Game() {
   /**
@@ -36,7 +35,7 @@ export default function Game() {
    * RESPONSIVENESS
    */
   const { size } = useThree();
-  const [scaleRatio, deltaPosition] = useMemo(() => {
+  const [_, deltaPosition] = useMemo(() => {
     return [1, size.width * 0.001];
   }, [size]);
 
