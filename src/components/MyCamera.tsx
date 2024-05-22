@@ -10,11 +10,11 @@ interface MyCameraProps
 export default function MyCamera(props: MyCameraProps) {
   const { cameraPosition, targetPosition, moveFactor } = useControls("Camera", {
     cameraPosition: {
-      value: { x: 0, y: 3, z: 3.5 },
+      value: { x: 0, y: 3.3, z: 3.5 },
     },
     targetPosition: { value: { x: 0, y: 1.5, z: -3 } },
     moveFactor: {
-      value: { x: 1, y: 0.1 },
+      value: { x: 1, y: 0.0 },
     },
   });
 

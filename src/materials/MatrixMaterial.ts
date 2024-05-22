@@ -1,5 +1,5 @@
 import {
-  AdditiveBlending,
+  //AdditiveBlending,
   Color,
   DoubleSide,
   ShaderMaterial,
@@ -19,7 +19,7 @@ export class MatrixMaterial extends ShaderMaterial {
     this.transparent = true;
     this.depthWrite = false;
     this.fog = true;
-    this.blending = AdditiveBlending;
+    //this.blending = AdditiveBlending;
     this.uniforms = {
       uTime: new Uniform<number>(0),
       uColor: new Uniform<Color>(new Color()),
