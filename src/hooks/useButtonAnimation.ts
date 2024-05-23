@@ -1,4 +1,5 @@
 import { SpringValue, useTransition } from "@react-spring/three";
+import { useThree } from "@react-three/fiber";
 
 export type ButtonAnimationStyles = {
   yOffset: SpringValue<number>;
@@ -13,9 +14,12 @@ export default function useButtonsAnimations(
   buttons: any[],
   direction: number,
 ) {
+  const size = useThree((state) => state.size);
+  const amount = Math.min(size.width / size.height, 1);
+
   return useTransition<any, ButtonAnimationStyles>(buttons, {
     from: (_, index) => ({
-      xOffset: DISTANCE_ENTER_BUTTON * direction,
+      xOffset: DISTANCE_ENTER_BUTTON * direction * amount,
       yOffset: -index * DISTANCE_BETWEEN_BUTTON,
       opacity: 0,
     }),
@@ -29,7 +33,7 @@ export default function useButtonsAnimations(
       yOffset: -index * DISTANCE_BETWEEN_BUTTON,
     }),
     leave: {
-      xOffset: DISTANCE_ENTER_BUTTON * direction,
+      xOffset: DISTANCE_ENTER_BUTTON * direction * amount,
       opacity: 0,
     },
   });

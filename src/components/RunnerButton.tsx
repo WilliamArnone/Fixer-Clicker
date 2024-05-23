@@ -3,9 +3,9 @@ import { Float, Text, useTexture } from "@react-three/drei";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { RunnerData } from "../data/characters";
-import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { MissionRef } from "./MissionButton";
-import { Mesh, PlaneGeometry } from "three";
+import { PlaneGeometry } from "three";
 import { useGame } from "../hooks/useGame";
 import {
   PlayButtonConfirm,
@@ -13,6 +13,7 @@ import {
   PlayMissionCompleted,
 } from "../data/audioFiles";
 import { FONT_DESCRIPTION, FONT_TITLE } from "../data/fonts";
+import { DEFAULT_BUTTON_BG } from "../data/theme";
 
 type RunnerButtonProps = {
   index: number;
@@ -35,18 +36,27 @@ const AText = animated(Text);
 const PROGRESS_SPEED = 1;
 const MAX_PROGRESS = 10;
 
+const isDead = () => {
+  return Math.random() < 0.3;
+};
+
 const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
   ({ style, data }, ref) => {
     const [phase, setPhase] = useState<RunnerPhase>("idle");
     const [myMissions, setMyMissions] = useState<MissionRef[]>([]);
-    const [myColor, _] = useState(
+    const [myColor, setMyColor] = useState(
       () => `hsl(${Math.floor(Math.random() * 240 + 60)}, 100%, 60%)`,
     );
 
     const removeMission = useGame((state) => state.removeMission);
+    const removeRunner = useGame((state) => state.removeRunner);
+    const triggerGlitch = useGame((state) => state.triggerGlitch);
+
+    const size = useThree((state) => state.size);
+    const amount = Math.min((size.width / size.height) * 0.5, 1);
 
     const interactionStyle = useSpring({
-      xOffset: phase === "idle" ? 0 : phase === "hover" ? -2 : -3.5,
+      xOffset: (phase === "idle" ? 0 : phase === "hover" ? -2 : -3.5) * amount,
       overlay1Z: phase === "hover" ? 0.6 : phase === "active" ? 0.1 : 1,
       overlay2Z: phase === "hover" ? 0.9 : phase === "active" ? 0.3 : 1.2,
       overlay3Z: phase === "hover" ? 1 : phase === "active" ? 0.5 : 1.5,
@@ -66,33 +76,47 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
      * LOGIC
      */
 
-    const progressBar = useRef<Mesh>(null);
+    const progress = useRef(0);
     useFrame((_, delta) => {
-      if (!progressBar === null || progressBar.current === null) return;
-
       if (phase !== "active") {
-        progressBar.current.scale.x = 0;
+        progress.current = 0;
         return;
       }
 
-      let progress = progressBar.current.scale.x + delta * PROGRESS_SPEED;
+      let newprogress = progress.current + delta * PROGRESS_SPEED;
 
-      if (progress >= MAX_PROGRESS) {
-        progress = 0;
+      if (newprogress >= MAX_PROGRESS) {
+        newprogress = 0;
 
-        const missions = [...myMissions];
-        const missionRef = missions[0];
-        missions.splice(0, 1);
+        if (isDead()) {
+          triggerGlitch();
 
-        removeMission(missionRef.mission);
-        PlayMissionCompleted();
+          for (const ref of myMissions) {
+            ref.setColor(DEFAULT_BUTTON_BG);
+            ref.setPhase("idle");
+          }
 
-        if (missions.length === 0) setPhase("idle");
+          setPhase("dying");
+          setMyColor("#ff0000");
 
-        setMyMissions(missions);
+          setTimeout(() => {
+            removeRunner(data);
+          }, 3000);
+        } else {
+          const missions = [...myMissions];
+          const missionRef = missions[0];
+          missions.splice(0, 1);
+
+          removeMission(missionRef.mission);
+          PlayMissionCompleted();
+
+          if (missions.length === 0) setPhase("idle");
+
+          setMyMissions(missions);
+        }
       }
 
-      progressBar.current.scale.x = progress;
+      progress.current = newprogress;
     });
 
     /**
@@ -188,7 +212,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                 map={overlayBottomTexture}
               />
 
-              {phase !== "active" && (
+              {phase !== "dying" && phase !== "active" && (
                 <Text
                   fontSize={0.85}
                   maxWidth={13}
@@ -200,6 +224,21 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                     opacity={style.opacity}
                   />
                   READY
+                </Text>
+              )}
+
+              {phase === "dying" && (
+                <Text
+                  fontSize={0.85}
+                  maxWidth={13}
+                  font={FONT_TITLE}
+                  position={[0, 0, 0.5]}
+                >
+                  <a.meshBasicMaterial
+                    color={"white"}
+                    opacity={style.opacity}
+                  />
+                  DEAD
                 </Text>
               )}
 
@@ -217,15 +256,6 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                   PROGRESS
                 </Text>
               )}
-
-              <mesh
-                scale={[0, 0, 0]}
-                ref={progressBar}
-                position={[-5.5, -2, 1]}
-                geometry={planeGeometry}
-              >
-                <meshBasicMaterial color={"white"} />
-              </mesh>
             </a.mesh>
           </Float>
 

@@ -1,7 +1,7 @@
 import { PerspectiveCamera as PCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useControls } from "leva";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Vector3 } from "three";
 import { PerspectiveCamera } from "three";
 import { useGame } from "../hooks/useGame";
@@ -14,7 +14,9 @@ export default function MyCamera(props: MyCameraProps) {
 
   useEffect(() => {
     if (phase === "intro" && camera instanceof PerspectiveCamera) {
-      camera.fov = 150;
+      console.log("Hello");
+
+      camera.fov = 170;
       camera.updateProjectionMatrix();
     }
   }, [phase]);

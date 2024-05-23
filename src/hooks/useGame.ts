@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { missionNames } from "../data/missionNames";
 import { randInt } from "three/src/math/MathUtils.js";
 import { RunnerData, characters } from "../data/characters";
+import { PlayMissionFailed } from "../data/audioFiles";
 
 type GamePhase = "loading" | "intro" | "game";
-//type MissionState = "idle" | "hover" | "selected" | "assigned";
 
 interface GameState {
   phase: GamePhase;
@@ -13,6 +13,7 @@ interface GameState {
   missionPool: string[];
   missions: string[];
   glitch: boolean;
+  glitchTimeout: number;
 }
 
 interface GameAction {
@@ -21,7 +22,7 @@ interface GameAction {
   removeRunner: (runner: RunnerData) => void;
   addMission: () => string;
   removeMission: (mission: string) => void;
-  setGlitch: (glitch: boolean) => void;
+  triggerGlitch: () => void;
 }
 
 const createNewAvalableRunner = (runners: RunnerData[]) =>
@@ -32,7 +33,7 @@ const createNewAvalableMissions = (missions: string[]) =>
   );
 
 export const useGame = create<GameState & GameAction>((set) => ({
-  phase: "game",
+  phase: "loading",
   runnerPool: [...characters],
   runners: [],
   missionPool: [...missionNames],
@@ -66,13 +67,6 @@ export const useGame = create<GameState & GameAction>((set) => ({
     return newRunner;
   },
 
-  // setMissionState: (mission, missionState) =>
-  //   set((state) => ({
-  //     missions: state.missions.map((miss) =>
-  //       miss !== mission ? miss : { ...mission, state: missionState },
-  //     ),
-  //   })),
-
   removeRunner: (runner) =>
     set((state) => ({
       runners: state.runners.filter((r) => r !== runner),
@@ -103,19 +97,23 @@ export const useGame = create<GameState & GameAction>((set) => ({
     return newMission;
   },
 
-  // setMissionState: (mission, missionState) =>
-  //   set((state) => ({
-  //     missions: state.missions.map((miss) =>
-  //       miss !== mission ? miss : { ...mission, state: missionState },
-  //     ),
-  //   })),
-
   removeMission: (mission) =>
     set((state) => ({
       missions: state.missions.filter((miss) => miss !== mission),
     })),
 
-  setGlitch: (glitch) => {
-    set((_) => ({ glitch: glitch }));
-  },
+  glitchTimeout: -1,
+
+  triggerGlitch: () =>
+    set((state) => {
+      clearTimeout(state.glitchTimeout);
+      PlayMissionFailed();
+
+      return {
+        glitch: true,
+        glitchTimeout: setTimeout(() => {
+          set(() => ({ glitch: false, glitchTimeout: -1 }));
+        }, 2000),
+      };
+    }),
 }));

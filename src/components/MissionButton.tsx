@@ -3,7 +3,7 @@ import { Float, Text, useTexture } from "@react-three/drei";
 import { DoubleSide, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useState } from "react";
-import { ThreeEvent } from "@react-three/fiber";
+import { ThreeEvent, useThree } from "@react-three/fiber";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import {
   PlayButtonDeselect,
@@ -36,8 +36,11 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
     const [phase, setPhase] = useState<MissionPhase>("idle");
     const [color, setColor] = useState<string>(DEFAULT_BUTTON_BG);
 
+    const size = useThree((state) => state.size);
+    const amount = Math.min((size.width / size.height) * 0.5, 1);
+
     const interactionStyle = useSpring({
-      xOffset: phase === "idle" ? 0 : phase === "hover" ? 2 : 3.5,
+      xOffset: (phase === "idle" ? 0 : phase === "hover" ? 2 : 3.5) * amount,
       overlay1Z: phase === "hover" ? 0.6 : phase === "idle" ? 1 : 0.1,
       overlay2Z: phase === "hover" ? 0.9 : phase === "idle" ? 1.2 : 0.3,
       overlay3Z: phase === "hover" ? 1 : phase === "idle" ? 1.5 : 0.5,
