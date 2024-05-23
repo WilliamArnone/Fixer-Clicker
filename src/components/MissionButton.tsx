@@ -2,7 +2,7 @@ import { a, animated, useSpring } from "@react-spring/three";
 import { Float, Text, useTexture } from "@react-three/drei";
 import { DoubleSide, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
-import { forwardRef, useCallback, useState } from "react";
+import { forwardRef, useCallback, useRef, useState } from "react";
 import { ThreeEvent, useThree } from "@react-three/fiber";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import {
@@ -14,6 +14,7 @@ import { FONT_DESCRIPTION_BOLD } from "../data/fonts";
 
 export type MissionRef = {
   mission: string;
+  difficulty: number;
   setPhase: React.Dispatch<React.SetStateAction<MissionPhase>>;
   setColor: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -31,10 +32,16 @@ const baseGeometry = new PlaneGeometry(15, 4.5);
 const overlayCornerGeometry = new PlaneGeometry(2, 2);
 const overlayAimGeometry = new PlaneGeometry(3, 3);
 
+const generateMission = () => {
+  return Math.round(Math.random());
+};
+
 const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
   ({ style, mission }, ref) => {
     const [phase, setPhase] = useState<MissionPhase>("idle");
     const [color, setColor] = useState<string>(DEFAULT_BUTTON_BG);
+
+    const difficulty = useRef(generateMission());
 
     const size = useThree((state) => state.size);
     const amount = Math.min((size.width / size.height) * 0.5, 1);
@@ -50,8 +57,10 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
      * TEXTURES
      */
 
-    const base1Texture = useTexture("/img/Mission/Base1.png");
-    //const base2Texture = useTexture("/img/Mission/Base2.png");
+    const baseTexture = [
+      useTexture("/img/Mission/Base1.png"),
+      useTexture("/img/Mission/Base2.png"),
+    ];
     const overlayCornerTexture = useTexture("/img/Mission/OverlayCorner.png");
     const overlayAimTexture = useTexture("/img/Mission/OverlayAim.png");
 
@@ -88,7 +97,12 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
           case "hover":
           case "idle":
             if (ref && typeof ref !== "function" && ref.current) {
-              ref.current.push({ mission, setColor, setPhase });
+              ref.current.push({
+                mission,
+                difficulty: difficulty.current,
+                setColor,
+                setPhase,
+              });
             }
             PlayButtonSelect();
             return "selected";
@@ -124,7 +138,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
             opacity={style.opacity}
             color={color}
             depthWrite={false}
-            map={base1Texture}
+            map={baseTexture[difficulty.current]}
           />
 
           <Float rotationIntensity={0} speed={3} floatingRange={[0, 0.2]}>

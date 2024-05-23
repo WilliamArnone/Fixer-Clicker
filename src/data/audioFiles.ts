@@ -20,6 +20,9 @@ missionComplete.volume = 0.6;
 missionFailed.volume = 0.4;
 
 export const PlayButtonHover = () => {
+  if (buttonHover.currentTime > 0.0001 && buttonHover.currentTime < 0.07)
+    return;
+
   buttonHover.pause();
   buttonHover.currentTime = 0;
   buttonHover.play();

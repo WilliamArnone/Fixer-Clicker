@@ -123,38 +123,47 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
      * EVENT HANDLERS
      */
 
-    const pointerEnter = useCallback((e: ThreeEvent<PointerEvent>) => {
-      e.stopPropagation();
-      if (phase === "idle") PlayButtonHover();
-      setPhase((phase: RunnerPhase) => (phase === "idle" ? "hover" : phase));
-    }, []);
+    const pointerEnter = useCallback(
+      (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+        if (phase === "idle") PlayButtonHover();
+        setPhase((phase: RunnerPhase) => (phase === "idle" ? "hover" : phase));
+      },
+      [phase],
+    );
 
-    const pointerLeave = useCallback((e: ThreeEvent<PointerEvent>) => {
-      e.stopPropagation();
-      setPhase((phase: RunnerPhase) => (phase === "hover" ? "idle" : phase));
-    }, []);
+    const pointerLeave = useCallback(
+      (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+        setPhase((phase: RunnerPhase) => (phase === "hover" ? "idle" : phase));
+      },
+      [phase],
+    );
 
-    const click = useCallback((e: ThreeEvent<PointerEvent>) => {
-      e.stopPropagation();
+    const click = useCallback(
+      (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
 
-      if (phase === "active" || phase === "dying") return;
+        if (phase === "active" || phase === "dying") return;
 
-      if (
-        ref &&
-        typeof ref !== "function" &&
-        ref.current &&
-        ref.current.length > 0
-      ) {
-        setMyMissions([...ref.current]);
-        setPhase("active");
-        PlayButtonConfirm();
-        for (const missionRef of ref.current) {
-          missionRef.setPhase("assigned");
-          missionRef.setColor(myColor);
+        if (
+          ref &&
+          typeof ref !== "function" &&
+          ref.current &&
+          ref.current.length > 0
+        ) {
+          setMyMissions([...ref.current]);
+          setPhase("active");
+          PlayButtonConfirm();
+          for (const missionRef of ref.current) {
+            missionRef.setPhase("assigned");
+            missionRef.setColor(myColor);
+          }
+          ref.current = [];
         }
-        ref.current = [];
-      }
-    }, []);
+      },
+      [phase],
+    );
 
     return (
       <a.group
