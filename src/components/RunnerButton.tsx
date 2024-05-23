@@ -14,6 +14,7 @@ import {
 } from "../data/audioFiles";
 import { FONT_DESCRIPTION, FONT_TITLE } from "../data/fonts";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
+import RunnerProgress from "./RunnerProgress";
 
 type RunnerButtonProps = {
   index: number;
@@ -263,6 +264,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                     opacity={style.opacity}
                   />
                   PROGRESS
+                  <RunnerProgress ref={progress} style={style} position-x={4} />
                 </Text>
               )}
             </a.mesh>
