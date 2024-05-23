@@ -2,7 +2,7 @@ import { Matrix4, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import React, { forwardRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { a, useSpring, config } from "@react-spring/three";
+import { a, useSpring } from "@react-spring/three";
 
 interface RunnerProgressProps extends React.ComponentPropsWithoutRef<"group"> {
   style: ButtonAnimationStyles;
