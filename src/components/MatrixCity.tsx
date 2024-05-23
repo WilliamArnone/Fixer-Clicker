@@ -3,7 +3,6 @@ import { MatrixMaterial } from "../materials/MatrixMaterial";
 import { useGLTF } from "@react-three/drei";
 import { Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
-import { useControls } from "leva";
 import { useGame } from "../hooks/useGame";
 
 const CITIES = {
@@ -32,14 +31,6 @@ export default function MatrixCity({
   const geometry =
     cityModel.scene.children[0] instanceof Mesh &&
     cityModel.scene.children[0].geometry;
-
-  /**
-   * CONTROLS
-   */
-  const { materialSpeed } = useControls("Matrix City", {
-    materialSpeed: { value: 1, min: 0, max: 20 },
-  });
-
   /**
    * UPDATE
    */
@@ -48,8 +39,7 @@ export default function MatrixCity({
 
     let speedTarget = 0;
 
-    if (phase === "game")
-      speedTarget = glitch ? materialSpeed * 50 : materialSpeed;
+    if (phase === "game") speedTarget = glitch ? 50 : 0.6;
 
     materialSpeedRef.current +=
       (speedTarget - materialSpeedRef.current) * delta * 0.5;

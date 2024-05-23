@@ -14,8 +14,6 @@ export default function MyCamera(props: MyCameraProps) {
 
   useEffect(() => {
     if (phase === "intro" && camera instanceof PerspectiveCamera) {
-      console.log("Hello");
-
       camera.fov = 170;
       camera.updateProjectionMatrix();
     }

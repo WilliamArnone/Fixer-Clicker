@@ -1,8 +1,7 @@
 import { useGame } from "../hooks/useGame";
 import { Text } from "@react-three/drei";
-import { useControls } from "leva";
 import useButtonsAnimations from "../hooks/useButtonAnimation";
-import { forwardRef } from "react";
+import { Suspense, forwardRef } from "react";
 import MissionButton, { MissionRef } from "./MissionButton";
 import { FONT_TITLE } from "../data/fonts";
 
@@ -14,29 +13,26 @@ const MissionList = forwardRef<MissionRef[], MissionListProps>(
   ({ name, ...props }, ref) => {
     const missions = useGame((state) => state.missions);
 
-    const { titlePosition, buttonStartPosition } = useControls({
-      titlePosition: { value: [0, 0.1, 1.3] },
-      buttonStartPosition: { value: [0, -0.4, 1] },
-    });
-
     const transitions = useButtonsAnimations(missions, 1);
 
     return (
-      <group {...props}>
-        <Text
-          position={titlePosition}
-          scale={0.1}
-          fontSize={2.5}
-          font={FONT_TITLE}
-        >
-          {name}
-        </Text>
-        <group position={buttonStartPosition} scale={1.2}>
-          {transitions((style, mission) => (
-            <MissionButton mission={mission} style={style} ref={ref} />
-          ))}
+      <Suspense>
+        <group {...props}>
+          <Text
+            position={[0, 0.1, 1.3]}
+            scale={0.1}
+            fontSize={2.5}
+            font={FONT_TITLE}
+          >
+            {name}
+          </Text>
+          <group position={[0, -0.4, 1]} scale={1.2}>
+            {transitions((style, mission) => (
+              <MissionButton mission={mission} style={style} ref={ref} />
+            ))}
+          </group>
         </group>
-      </group>
+      </Suspense>
     );
   },
 );

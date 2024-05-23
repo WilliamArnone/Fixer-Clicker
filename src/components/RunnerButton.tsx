@@ -41,6 +41,11 @@ const isDead = () => {
   return Math.random() < 0.3;
 };
 
+useTexture.preload("/img/Runner/Base.png");
+useTexture.preload("/img/Runner/OverlayCorner.png");
+useTexture.preload("/img/Runner/OverlayTop.png");
+useTexture.preload("/img/Runner/OverlayBottom.png");
+
 const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
   ({ style, data }, ref) => {
     const [phase, setPhase] = useState<RunnerPhase>("idle");
@@ -68,7 +73,6 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
      */
 
     const baseTexture = useTexture("/img/Runner/Base.png");
-
     const overlayCornerTexture = useTexture("/img/Runner/OverlayCorner.png");
     const overlayTopTexture = useTexture("/img/Runner/OverlayTop.png");
     const overlayBottomTexture = useTexture("/img/Runner/OverlayBottom.png");
@@ -108,7 +112,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
           const missionRef = missions[0];
           missions.splice(0, 1);
 
-          removeMission(missionRef.mission);
+          removeMission(missionRef.mission, missionRef.difficulty);
           PlayMissionCompleted();
 
           if (missions.length === 0) setPhase("idle");

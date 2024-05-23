@@ -8,6 +8,7 @@ type GamePhase = "loading" | "intro" | "game";
 
 interface GameState {
   phase: GamePhase;
+  eurodollars: number;
   runnerPool: RunnerData[];
   runners: RunnerData[];
   missionPool: string[];
@@ -21,7 +22,7 @@ interface GameAction {
   addRunner: () => RunnerData;
   removeRunner: (runner: RunnerData) => void;
   addMission: () => string;
-  removeMission: (mission: string) => void;
+  removeMission: (mission: string, difficulty: number) => void;
   triggerGlitch: () => void;
 }
 
@@ -34,6 +35,7 @@ const createNewAvalableMissions = (missions: string[]) =>
 
 export const useGame = create<GameState & GameAction>((set) => ({
   phase: "loading",
+  eurodollars: 150,
   runnerPool: [...characters],
   runners: [],
   missionPool: [...missionNames],
@@ -97,9 +99,10 @@ export const useGame = create<GameState & GameAction>((set) => ({
     return newMission;
   },
 
-  removeMission: (mission) =>
+  removeMission: (mission, difficulty) =>
     set((state) => ({
       missions: state.missions.filter((miss) => miss !== mission),
+      eurodollars: state.eurodollars + 50 * Math.pow(2, difficulty + 1),
     })),
 
   glitchTimeout: -1,

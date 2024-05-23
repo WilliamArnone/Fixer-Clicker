@@ -36,6 +36,11 @@ const generateMission = () => {
   return Math.round(Math.random());
 };
 
+useTexture.preload("/img/Mission/Base1.png");
+useTexture.preload("/img/Mission/Base2.png");
+useTexture.preload("/img/Mission/OverlayCorner.png");
+useTexture.preload("/img/Mission/OverlayAim.png");
+
 const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
   ({ style, mission }, ref) => {
     const [phase, setPhase] = useState<MissionPhase>("idle");
