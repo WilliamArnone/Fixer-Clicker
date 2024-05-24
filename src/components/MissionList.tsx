@@ -1,7 +1,7 @@
 import { useGame } from "../hooks/useGame";
 import { Text } from "@react-three/drei";
 import useButtonsAnimations from "../hooks/useButtonAnimation";
-import { Suspense, forwardRef } from "react";
+import { forwardRef } from "react";
 import MissionButton, { MissionRef } from "./MissionButton";
 import { FONT_TITLE } from "../data/fonts";
 
