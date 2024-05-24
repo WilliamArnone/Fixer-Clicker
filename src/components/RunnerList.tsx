@@ -23,6 +23,7 @@ const RunnerList = forwardRef<MissionRef[], RunnerListProps>(
           scale={0.1}
           fontSize={2.5}
           font={FONT_TITLE}
+          characters="abcdefghijklmnopqrstuvwxyz,."
         >
           {name}
         </Text>

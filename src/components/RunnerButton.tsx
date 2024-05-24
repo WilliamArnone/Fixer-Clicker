@@ -232,6 +232,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                   maxWidth={13}
                   font={FONT_TITLE}
                   position={[0, 0, 0.5]}
+                  characters="abcdefghijklmnopqrstuvwxyz,."
                 >
                   <a.meshBasicMaterial
                     color={"white"}
@@ -247,6 +248,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                   maxWidth={13}
                   font={FONT_TITLE}
                   position={[0, 0, 0.5]}
+                  characters="abcdefghijklmnopqrstuvwxyz,."
                 >
                   <a.meshBasicMaterial
                     color={"white"}
@@ -262,6 +264,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                   maxWidth={13}
                   font={FONT_TITLE}
                   position={[-3, 0, 0.5]}
+                  characters="abcdefghijklmnopqrstuvwxyz,."
                 >
                   <a.meshBasicMaterial
                     color={"white"}

@@ -22,16 +22,15 @@ const MissionList = forwardRef<MissionRef[], MissionListProps>(
           scale={0.1}
           fontSize={2.5}
           font={FONT_TITLE}
+          characters="abcdefghijklmnopqrstuvwxyz,."
         >
           {name}
         </Text>
-        <Suspense>
-          <group position={[0, -0.4, 1]} scale={1.2}>
-            {transitions((style, mission) => (
-              <MissionButton mission={mission} style={style} ref={ref} />
-            ))}
-          </group>
-        </Suspense>
+        <group position={[0, -0.4, 1]} scale={1.2}>
+          {transitions((style, mission) => (
+            <MissionButton mission={mission} style={style} ref={ref} />
+          ))}
+        </group>
       </group>
     );
   },

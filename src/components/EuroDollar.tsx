@@ -42,7 +42,7 @@ export default function EuroDollar(
   }, [eurodollars]);
   return (
     <group {...props}>
-      <Text font={FONT_TITLE}>
+      <Text font={FONT_TITLE} characters="0123456789€$">
         {eurodollars < 1000
           ? eurodollars
           : `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}k`}{" "}
