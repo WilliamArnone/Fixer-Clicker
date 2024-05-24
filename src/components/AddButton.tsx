@@ -1,7 +1,7 @@
 import { a, useSpring, SpringRef, config } from "@react-spring/three";
 import { useTexture } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
-import React, { Suspense, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { PlaneGeometry } from "three";
 
 const planeGeometry = new PlaneGeometry(0.5, 0.5);
@@ -52,31 +52,29 @@ export default function AddButton({ callback, ...props }: AddButtonProps) {
   );
 
   return (
-    <Suspense>
-      <group {...props}>
-        <mesh
-          geometry={planeGeometry}
-          onPointerUp={pointerUP}
-          onPointerEnter={pointerEnter}
-          onPointerLeave={pointerLeave}
-        >
-          <a.meshBasicMaterial
-            transparent
-            depthWrite={false}
-            color={spring.color}
-            map={baseTexture}
-            opacity={spring.opacity}
-          ></a.meshBasicMaterial>
-        </mesh>
-        <a.mesh geometry={planeGeometry} position-z={spring.zDistance}>
-          <a.meshBasicMaterial
-            transparent
-            depthWrite={false}
-            color={spring.color}
-            map={overlayTexture}
-          ></a.meshBasicMaterial>
-        </a.mesh>
-      </group>
-    </Suspense>
+    <group {...props}>
+      <mesh
+        geometry={planeGeometry}
+        onPointerUp={pointerUP}
+        onPointerEnter={pointerEnter}
+        onPointerLeave={pointerLeave}
+      >
+        <a.meshBasicMaterial
+          transparent
+          depthWrite={false}
+          color={spring.color}
+          map={baseTexture}
+          opacity={spring.opacity}
+        ></a.meshBasicMaterial>
+      </mesh>
+      <a.mesh geometry={planeGeometry} position-z={spring.zDistance}>
+        <a.meshBasicMaterial
+          transparent
+          depthWrite={false}
+          color={spring.color}
+          map={overlayTexture}
+        ></a.meshBasicMaterial>
+      </a.mesh>
+    </group>
   );
 }

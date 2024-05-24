@@ -17,16 +17,16 @@ const RunnerList = forwardRef<MissionRef[], RunnerListProps>(
     const transitions = useButtonsAnimations(runners, -1);
 
     return (
-      <Suspense>
-        <group {...props}>
-          <Text
-            position={[0, 0.1, 1.3]}
-            scale={0.1}
-            fontSize={2.5}
-            font={FONT_TITLE}
-          >
-            {name}
-          </Text>
+      <group {...props}>
+        <Text
+          position={[0, 0.1, 1.3]}
+          scale={0.1}
+          fontSize={2.5}
+          font={FONT_TITLE}
+        >
+          {name}
+        </Text>
+        <Suspense>
           <group position={[0, -0.4, 1]} scale={1.4}>
             {transitions((style, runners, _, index) => (
               <RunnerButton
@@ -37,8 +37,8 @@ const RunnerList = forwardRef<MissionRef[], RunnerListProps>(
               />
             ))}
           </group>
-        </group>
-      </Suspense>
+        </Suspense>
+      </group>
     );
   },
 );

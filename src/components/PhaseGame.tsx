@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import MissionList from "./MissionList";
 import RunnerList from "./RunnerList";
 import EuroDollar from "./EuroDollar";
@@ -32,15 +32,17 @@ export default function PhaseGame() {
     <>
       {phase === "game" && (
         <group rotation-x={-0.2} scale={scaleRatio} position-y={3.4}>
-          <EuroDollar position-y={1.3} scale={0.4} position-x={-0.1} />
-          <AddButton
-            callback={addMissionButtonCallback}
-            position={[-deltaPosition, 0.7, 1]}
-          />
-          <AddButton
-            callback={addRunnerButtonCallback}
-            position={[deltaPosition, 0.7, 1]}
-          />
+          <Suspense>
+            <EuroDollar position-y={1.3} scale={0.4} position-x={-0.1} />
+            <AddButton
+              callback={addMissionButtonCallback}
+              position={[-deltaPosition, 0.7, 1]}
+            />
+            <AddButton
+              callback={addRunnerButtonCallback}
+              position={[deltaPosition, 0.7, 1]}
+            />
+          </Suspense>
           <MissionList
             rotation-y={0.1}
             position-x={-deltaPosition}

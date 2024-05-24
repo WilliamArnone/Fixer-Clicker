@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGame } from "../hooks/useGame";
 import { Text } from "@react-three/drei";
 import { a, useSpring, config } from "@react-spring/three";
@@ -41,16 +41,14 @@ export default function EuroDollar(
     prevEuroDollars.current = eurodollars;
   }, [eurodollars]);
   return (
-    <Suspense>
-      <group {...props}>
-        <Text font={FONT_TITLE}>
-          {eurodollars < 1000
-            ? eurodollars
-            : `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}k`}{" "}
-          €$
-          <a.meshBasicMaterial opacity={style.opacity} color={anim.color} />
-        </Text>
-      </group>
-    </Suspense>
+    <group {...props}>
+      <Text font={FONT_TITLE}>
+        {eurodollars < 1000
+          ? eurodollars
+          : `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}k`}{" "}
+        €$
+        <a.meshBasicMaterial opacity={style.opacity} color={anim.color} />
+      </Text>
+    </group>
   );
 }
