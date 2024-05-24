@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useGame } from "./useGame";
 import { SpringRef } from "@react-spring/three";
 import { AddButtonCallbackStyleRef } from "../components/AddButton";
+import { PlayAdd, PlayError } from "../data/audioFiles";
 
 export default function useAddRunner() {
   const eurodollars = useGame((state) => state.eurodollars);
@@ -9,7 +10,8 @@ export default function useAddRunner() {
 
   const addRunnerCallback = useCallback(
     (springAPI: SpringRef<AddButtonCallbackStyleRef>) => {
-      if (eurodollars > 100) {
+      if (eurodollars >= 100) {
+        PlayAdd();
         springAPI.start({
           from: { color: "#ffff00", zDistance: 0.01 },
           to: { color: "#ffffff", zDistance: 0.06 },
@@ -17,7 +19,7 @@ export default function useAddRunner() {
 
         addRunner();
       } else {
-        //play error sound
+        PlayError();
         springAPI.start({
           from: { color: "#ff0000", zDistance: 0.01 },
           to: { color: "#ffffff", zDistance: 0.06 },

@@ -7,7 +7,9 @@ export default function PhaseLoading() {
   const [phase, setPhase] = useGame((state) => [state.phase, state.setPhase]);
 
   useEffect(() => {
-    setPhase("intro");
+    setTimeout(() => {
+      setPhase("intro");
+    }, 2000);
   }, []);
 
   return (

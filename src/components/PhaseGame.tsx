@@ -8,6 +8,7 @@ import useAddRunner from "../hooks/useAddRunner";
 import useAddMission from "../hooks/useAddMission";
 import { useGame } from "../hooks/useGame";
 import useResponsiveness from "../hooks/useResponsiveness";
+import { PlayBass, PlaySong } from "../data/audioFiles";
 
 export default function PhaseGame() {
   const [phase, setPhase] = useGame((state) => [state.phase, state.setPhase]);
@@ -15,10 +16,20 @@ export default function PhaseGame() {
   const addRunnerButtonCallback = useAddRunner();
 
   useEffect(() => {
-    if (phase === "intro")
+    if (phase === "intro") {
+      /**
+       * INTRO
+       */
+      PlayBass();
       setTimeout(() => {
         setPhase("game");
-      }, 2000);
+      }, 1500);
+    } else if (phase === "game") {
+      /**
+       * GAME
+       */
+      PlaySong();
+    }
   }, [phase]);
 
   const selectedMissions = useRef<MissionRef[]>([]);

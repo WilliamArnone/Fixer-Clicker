@@ -35,7 +35,7 @@ const createNewAvalableMissions = (missions: string[]) =>
 
 export const useGame = create<GameState & GameAction>((set) => ({
   phase: "loading",
-  eurodollars: 150,
+  eurodollars: 1500,
   runnerPool: [...characters],
   runners: [],
   missionPool: [...missionNames],
