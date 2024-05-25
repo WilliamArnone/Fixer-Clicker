@@ -3,6 +3,7 @@ import { missionNames } from "../data/missionNames";
 import { randInt } from "three/src/math/MathUtils.js";
 import { RunnerData, characters } from "../data/characters";
 import { PlayMissionFailed } from "../data/audioFiles";
+import { getMissionPrice } from "../data/economy";
 
 type GamePhase = "loading" | "intro" | "game";
 
@@ -22,7 +23,8 @@ interface GameAction {
   addRunner: () => RunnerData;
   removeRunner: (runner: RunnerData) => void;
   addMission: () => string;
-  removeMission: (mission: string, difficulty: number) => void;
+  payMission: () => void;
+  removeMission: (mission: string, reward: number) => void;
   triggerGlitch: () => void;
 }
 
@@ -35,7 +37,7 @@ const createNewAvalableMissions = (missions: string[]) =>
 
 export const useGame = create<GameState & GameAction>((set) => ({
   phase: "loading",
-  eurodollars: 1500,
+  eurodollars: 500,
   runnerPool: [...characters],
   runners: [],
   missionPool: [...missionNames],
@@ -63,6 +65,7 @@ export const useGame = create<GameState & GameAction>((set) => ({
       return {
         runners: [...state.runners, newRunner],
         runnerPool: newPool,
+        eurodollars: state.eurodollars - 100,
       };
     });
 
@@ -93,16 +96,25 @@ export const useGame = create<GameState & GameAction>((set) => ({
       return {
         missions: [...state.missions, newMission],
         missionPool: newPool,
+        eurodollars: state.eurodollars - getMissionPrice(state.eurodollars),
       };
     });
 
     return newMission;
   },
 
-  removeMission: (mission, difficulty) =>
+  payMission: () => {
+    set((state) => {
+      return {
+        eurodollars: state.eurodollars - getMissionPrice(state.eurodollars),
+      };
+    });
+  },
+
+  removeMission: (mission, reward) =>
     set((state) => ({
       missions: state.missions.filter((miss) => miss !== mission),
-      eurodollars: state.eurodollars + 50 * Math.pow(2, difficulty + 1),
+      eurodollars: state.eurodollars + reward,
     })),
 
   glitchTimeout: -1,

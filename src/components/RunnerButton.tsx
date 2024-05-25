@@ -15,6 +15,7 @@ import {
 import { FONT_DESCRIPTION, FONT_TITLE } from "../data/fonts";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import RunnerProgress from "./RunnerProgress";
+import { getIsDead } from "../data/economy";
 
 type RunnerButtonProps = {
   index: number;
@@ -36,10 +37,6 @@ const AText = animated(Text);
 
 const PROGRESS_SPEED = 1;
 const MAX_PROGRESS = 10;
-
-const isDead = () => {
-  return Math.random() < 0.3;
-};
 
 useTexture.preload("/img/Runner/Base.png");
 useTexture.preload("/img/Runner/OverlayCorner.png");
@@ -93,10 +90,13 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
       if (newprogress >= MAX_PROGRESS) {
         newprogress = 0;
 
-        if (isDead()) {
+        const missions = [...myMissions];
+        const missionRef = missions[0];
+
+        if (getIsDead(missionRef.difficulty)) {
           triggerGlitch();
 
-          for (const ref of myMissions) {
+          for (const ref of missions) {
             ref.setColor(DEFAULT_BUTTON_BG);
             ref.setPhase("idle");
           }
@@ -108,11 +108,9 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
             removeRunner(data);
           }, 3000);
         } else {
-          const missions = [...myMissions];
-          const missionRef = missions[0];
           missions.splice(0, 1);
 
-          removeMission(missionRef.mission, missionRef.difficulty);
+          removeMission(missionRef.mission, missionRef.reward);
           PlayMissionCompleted();
 
           if (missions.length === 0) setPhase("idle");

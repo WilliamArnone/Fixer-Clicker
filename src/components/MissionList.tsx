@@ -1,7 +1,7 @@
 import { useGame } from "../hooks/useGame";
 import { Text } from "@react-three/drei";
 import useButtonsAnimations from "../hooks/useButtonAnimation";
-import { forwardRef } from "react";
+import { Suspense, forwardRef } from "react";
 import MissionButton, { MissionRef } from "./MissionButton";
 import { FONT_TITLE } from "../data/fonts";
 
@@ -28,7 +28,9 @@ const MissionList = forwardRef<MissionRef[], MissionListProps>(
         </Text>
         <group position={[0, -0.4, 1]} scale={1.2}>
           {transitions((style, mission) => (
-            <MissionButton mission={mission} style={style} ref={ref} />
+            <Suspense>
+              <MissionButton mission={mission} style={style} ref={ref} />
+            </Suspense>
           ))}
         </group>
       </group>

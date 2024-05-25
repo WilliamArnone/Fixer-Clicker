@@ -27,18 +27,18 @@ const RunnerList = forwardRef<MissionRef[], RunnerListProps>(
         >
           {name}
         </Text>
-        <Suspense>
-          <group position={[0, -0.4, 1]} scale={1.4}>
-            {transitions((style, runners, _, index) => (
+        <group position={[0, -0.4, 1]} scale={1.4}>
+          {transitions((style, runners, _, index) => (
+            <Suspense>
               <RunnerButton
                 index={index}
                 data={runners}
                 style={style}
                 ref={ref}
               />
-            ))}
-          </group>
-        </Suspense>
+            </Suspense>
+          ))}
+        </group>
       </group>
     );
   },

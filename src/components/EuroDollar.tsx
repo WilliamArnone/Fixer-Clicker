@@ -10,6 +10,14 @@ function numberWithSpacesFloat(x: number) {
   return parts.join(".");
 }
 
+function EuroDollarsToLabel(eurodollars: number) {
+  if (eurodollars < 1000) return eurodollars.toString();
+  else if (eurodollars < 1000000)
+    return `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}K`;
+  else
+    return `${numberWithSpacesFloat(Math.floor(eurodollars / 100000) / 10000)}B`;
+}
+
 export default function EuroDollar(
   props: React.ComponentPropsWithoutRef<"group">,
 ) {
@@ -43,10 +51,7 @@ export default function EuroDollar(
   return (
     <group {...props}>
       <Text font={FONT_TITLE} characters="0123456789€$">
-        {eurodollars < 1000
-          ? eurodollars
-          : `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}k`}{" "}
-        €$
+        {EuroDollarsToLabel(eurodollars)} €$
         <a.meshBasicMaterial opacity={style.opacity} color={anim.color} />
       </Text>
     </group>
