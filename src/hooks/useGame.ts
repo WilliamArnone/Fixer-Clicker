@@ -96,7 +96,6 @@ export const useGame = create<GameState & GameAction>((set) => ({
       return {
         missions: [...state.missions, newMission],
         missionPool: newPool,
-        eurodollars: state.eurodollars - getMissionPrice(state.eurodollars),
       };
     });
 
