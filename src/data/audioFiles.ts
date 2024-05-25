@@ -108,3 +108,10 @@ export const PlayLoadingTyping = () => {
   LoadingTyping.currentTime = 0;
   LoadingTyping.play();
 };
+
+export const StopLoadingSounds = () => {
+  LoadingTech.pause();
+  LoadingTech.currentTime = 0;
+  LoadingTyping.pause();
+  LoadingTyping.currentTime = 0;
+};

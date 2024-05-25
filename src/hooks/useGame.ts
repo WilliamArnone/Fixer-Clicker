@@ -36,6 +36,7 @@ interface GameAction {
   addMission: (pay: boolean) => MissionData;
   removeMission: (mission: MissionData) => void;
   triggerGlitch: () => void;
+  reset: () => void;
 }
 
 const createNewAvalableRunner = (runners: RunnerData[]) =>
@@ -145,4 +146,14 @@ export const useGame = create<GameState & GameAction>((set) => ({
         }, 2000),
       };
     }),
+  reset: () =>
+    set(() => ({
+      phase: "intro",
+      eurodollars: 500,
+      runnerPool: [...characters],
+      runners: [],
+      missionPool: [...missionNames],
+      missions: [],
+      glitch: false,
+    })),
 }));

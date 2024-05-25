@@ -4,6 +4,8 @@ import { useGLTF } from "@react-three/drei";
 import { Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGame } from "../hooks/useGame";
+import { useControls } from "leva";
+import { BLUE } from "../data/theme";
 
 const CITIES = {
   city1: "/City1.glb",
@@ -16,17 +18,19 @@ const CITIES = {
 
 export default function MatrixCity({
   model,
-  color,
   ...props
 }: {
   model: keyof typeof CITIES;
-  color: string;
 }) {
   const phase = useGame((state) => state.phase);
 
   const speed = useRef<number>(0);
 
-  const materialRef = useRef<MatrixMaterial>(null);
+  const materialRef = useRef<MatrixMaterial>(null!);
+
+  const { color } = useControls("Matrix City", {
+    color: { value: BLUE },
+  });
 
   const cityModel = useGLTF(CITIES[model]);
   const geometry =
@@ -34,7 +38,10 @@ export default function MatrixCity({
     cityModel.scene.children[0].geometry;
 
   useEffect(() => {
-    if (phase === "intro") speed.current = 18;
+    if (phase === "intro") {
+      speed.current = 18;
+      materialRef.current.uniforms.uTime.value;
+    }
   }, [phase]);
 
   useFrame((_, delta) => {
@@ -45,8 +52,7 @@ export default function MatrixCity({
 
     speed.current += (speedTarget - speed.current) * delta * 0.5;
 
-    if (materialRef.current)
-      materialRef.current.uniforms.uTime.value += delta * speed.current;
+    materialRef.current.uniforms.uTime.value += delta * speed.current;
   });
 
   return (

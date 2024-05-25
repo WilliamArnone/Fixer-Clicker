@@ -22,7 +22,9 @@ export default function useResponsiveness() {
   const { size } = useThree();
   return useMemo(() => {
     return [
+      //Scale
       Math.min(size.width / size.height, 1.8) * scaleFactor + scaleMin,
+      //Width
       Math.min(size.width / size.height, 1) * widthFactor + widthMin,
     ];
   }, [size, scaleFactor, widthFactor, scaleMin, widthMin]);

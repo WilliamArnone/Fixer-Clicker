@@ -1,9 +1,9 @@
 import { a, animated, useSpring } from "@react-spring/three";
-import { Float, Text, useTexture } from "@react-three/drei";
-import { DoubleSide, PlaneGeometry } from "three";
+import { Float, Text, useCursor, useTexture } from "@react-three/drei";
+import { DoubleSide, Mesh, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
-import { forwardRef, useCallback, useState } from "react";
-import { ThreeEvent, useThree } from "@react-three/fiber";
+import { forwardRef, useCallback, useRef, useState } from "react";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import {
   PlayButtonDeselect,
@@ -42,15 +42,32 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
   ({ style, mission }, ref) => {
     const [phase, setPhase] = useState<MissionPhase>("idle");
     const [color, setColor] = useState<string>(DEFAULT_BUTTON_BG);
+    const [hover, setHover] = useState(false);
+    useCursor(hover);
 
     const size = useThree((state) => state.size);
     const amount = Math.min((size.width / size.height) * 0.5, 1);
 
+    const aim1 = useRef<Mesh>(null!);
+    const aim2 = useRef<Mesh>(null!);
+
+    /**
+     * ANIMATIONS
+     */
+
     const interactionStyle = useSpring({
       xOffset: (phase === "idle" ? 0 : phase === "hover" ? 2 : 3.5) * amount,
-      overlay1Z: phase === "hover" ? 0.6 : phase === "idle" ? 1 : 0.1,
-      overlay2Z: phase === "hover" ? 0.9 : phase === "idle" ? 1.2 : 0.3,
-      overlay3Z: phase === "hover" ? 1 : phase === "idle" ? 1.5 : 0.5,
+      overlay1Z: phase === "hover" ? 0.8 : phase === "idle" ? 1.5 : 0.2,
+      overlay2Z: phase === "hover" ? 1.2 : phase === "idle" ? 2 : 0.5,
+      overlay3Z: phase === "hover" ? 1.6 : phase === "idle" ? 2.5 : 0.8,
+      overlayAim: phase === "hover" ? 3 : phase === "idle" ? 4 : 2,
+    });
+
+    useFrame((_, delta) => {
+      if (phase === "assigned") {
+        aim1.current.rotation.z += delta;
+        aim2.current.rotation.z -= delta * 2;
+      }
     });
 
     /**
@@ -69,14 +86,26 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
     const pointerEnter = useCallback(
       (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
-        if (phase === "idle") PlayButtonHover();
-        setPhase((phase: MissionPhase) => (phase === "idle" ? "hover" : phase));
+        setPhase((phase: MissionPhase) => {
+          setHover(phase !== "assigned");
+
+          if (phase === "idle") PlayButtonHover();
+
+          if (phase !== "idle") return phase;
+
+          return "hover";
+        });
       },
       [phase],
     );
     const pointerLeave = useCallback((e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
-      setPhase((phase: MissionPhase) => (phase === "hover" ? "idle" : phase));
+      setPhase((phase: MissionPhase) => {
+        setHover(false);
+        if (phase !== "hover") return phase;
+
+        return "idle";
+      });
     }, []);
 
     const click = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -180,8 +209,10 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
           <a.mesh
             geometry={overlayAimGeometry}
             position={[6.4, 1, 0]}
-            position-z={2}
+            position-z={interactionStyle.overlayAim}
             scale={1.5}
+            ref={aim1}
+            // rotation-z={aimRotation.rotationClock}
           >
             <a.meshBasicMaterial
               transparent
@@ -195,6 +226,8 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
               geometry={overlayAimGeometry}
               position-z={interactionStyle.overlay1Z}
               scale={0.5}
+              ref={aim2}
+              // rotation-z={aimRotation.rotationCounterClock}
             >
               <a.meshBasicMaterial
                 transparent

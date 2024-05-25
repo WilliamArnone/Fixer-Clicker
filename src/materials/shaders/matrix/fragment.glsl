@@ -57,7 +57,7 @@ void main(){
 	alpha *= amount;
 
 	//initial animation
-	alpha *= 1.0 - step(uTime - 15.0, position.z);
+	alpha *= 1.0 - step(uTime - 17.0, position.z);
 	alpha = max(alpha, 0.0);
 	alpha *= smoothstep(-0.05, 0.1, position.y);
 

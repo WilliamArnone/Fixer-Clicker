@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import { useGame } from "../hooks/useGame";
 import PhaseIntro from "./Phases/PhaseIntro";
 import usePhaseManager from "../hooks/usePhaseManager";
+import PhaseIdle from "./Phases/PhaseIdle";
 
 export default function Game() {
   const phase = useGame((state) => state.phase);
@@ -28,7 +29,7 @@ export default function Game() {
       <MyCamera>
         {phase === "idle" && (
           <Suspense>
-            <PhaseLoading />
+            <PhaseIdle />
           </Suspense>
         )}
         {phase === "loading" && (
@@ -53,7 +54,6 @@ export default function Game() {
         model="city1"
         rotation-x={-Math.PI * 0.5 * 0}
         position-y={0}
-        color={"#1e56ff"}
       />
     </>
   );

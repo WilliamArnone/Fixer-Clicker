@@ -1,10 +1,14 @@
 import { a, useSpring, SpringRef, config } from "@react-spring/three";
-import { useTexture } from "@react-three/drei";
+import { useCursor, useTexture } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { PlaneGeometry } from "three";
 
 const planeGeometry = new PlaneGeometry(0.5, 0.5);
+
+export const idleDistance = 0.15;
+export const hoverDistance = 0.08;
+export const clickDistance = 0.03;
 
 export type AddButtonCallbackStyleRef = {
   opacity: number;
@@ -23,10 +27,14 @@ interface AddButtonProps extends React.ComponentPropsWithoutRef<"group"> {
 useTexture.preload("/img/Generic/AddButtonBase.png");
 useTexture.preload("/img/Generic/AddButtonOverlay.png");
 export default function AddButton({ callback, ...props }: AddButtonProps) {
+  const [hover, setHover] = useState(false);
+  useCursor(hover);
+
   const baseTexture = useTexture("/img/Generic/AddButtonBase.png");
   const overlayTexture = useTexture("/img/Generic/AddButtonOverlay.png");
+
   const [spring, api] = useSpring(() => ({
-    from: { opacity: 0, color: "#ffffff", zDistance: 0.06 },
+    from: { opacity: 0, color: "#ffffff", zDistance: idleDistance },
   }));
 
   useEffect(() => {
@@ -34,10 +42,12 @@ export default function AddButton({ callback, ...props }: AddButtonProps) {
   }, []);
 
   const pointerEnter = () => {
-    api.start({ zDistance: 0.03 });
+    setHover(true);
+    api.start({ zDistance: hoverDistance });
   };
   const pointerLeave = () => {
-    api.start({ zDistance: 0.06 });
+    setHover(false);
+    api.start({ zDistance: idleDistance });
   };
 
   const pointerUP = useCallback(

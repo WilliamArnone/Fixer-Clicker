@@ -8,9 +8,6 @@ export default function usePhaseManager() {
   useEffect(() => {
     switch (phase) {
       case "idle":
-        setTimeout(() => {
-          setPhase("intro");
-        }, 1500);
         break;
 
       case "loading":

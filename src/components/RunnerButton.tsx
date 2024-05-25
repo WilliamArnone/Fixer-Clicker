@@ -1,5 +1,5 @@
 import { a, animated, useSpring } from "@react-spring/three";
-import { Float, Text, useTexture } from "@react-three/drei";
+import { Float, Text, useCursor, useTexture } from "@react-three/drei";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { RunnerData } from "../data/characters";
@@ -48,8 +48,11 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
     const [phase, setPhase] = useState<RunnerPhase>("idle");
     const [myMissions, setMyMissions] = useState<MissionRef[]>([]);
     const [myColor, setMyColor] = useState(
-      () => `hsl(${Math.floor(Math.random() * 240 + 60)}, 100%, 60%)`,
+      () => `hsl(${Math.floor(Math.random() * 240 + 60)}, 100%, 40%)`,
     );
+
+    const [hover, setHover] = useState(false);
+    useCursor(hover);
 
     const removeMission = useGame((state) => state.removeMission);
     const removeRunner = useGame((state) => state.removeRunner);
@@ -60,9 +63,9 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
 
     const interactionStyle = useSpring({
       xOffset: (phase === "idle" ? 0 : phase === "hover" ? -2 : -3.5) * amount,
-      overlay1Z: phase === "hover" ? 0.6 : phase === "active" ? 0.1 : 1,
-      overlay2Z: phase === "hover" ? 0.9 : phase === "active" ? 0.3 : 1.2,
-      overlay3Z: phase === "hover" ? 1 : phase === "active" ? 0.5 : 1.5,
+      overlay1Z: phase === "hover" ? 0.8 : phase === "idle" ? 1.5 : 0.1,
+      overlay2Z: phase === "hover" ? 1.2 : phase === "idle" ? 2 : 0.3,
+      overlay3Z: phase === "hover" ? 1.6 : phase === "idle" ? 2.5 : 0.5,
     });
 
     /**
@@ -126,22 +129,26 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
      * EVENT HANDLERS
      */
 
-    const pointerEnter = useCallback(
-      (e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        if (phase === "idle") PlayButtonHover();
-        setPhase((phase: RunnerPhase) => (phase === "idle" ? "hover" : phase));
-      },
-      [phase],
-    );
+    const pointerEnter = useCallback((e: ThreeEvent<PointerEvent>) => {
+      e.stopPropagation();
+      setPhase((phase: RunnerPhase) => {
+        if (phase !== "idle") return phase;
 
-    const pointerLeave = useCallback(
-      (e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        setPhase((phase: RunnerPhase) => (phase === "hover" ? "idle" : phase));
-      },
-      [phase],
-    );
+        PlayButtonHover();
+        setHover(true);
+        return "hover";
+      });
+    }, []);
+
+    const pointerLeave = useCallback((e: ThreeEvent<PointerEvent>) => {
+      e.stopPropagation();
+      setPhase((phase: RunnerPhase) => {
+        setHover(false);
+        if (phase !== "hover") return phase;
+
+        return "idle";
+      });
+    }, []);
 
     const click = useCallback(
       (e: ThreeEvent<PointerEvent>) => {
@@ -158,6 +165,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
           setMyMissions([...ref.current]);
           setPhase("active");
           PlayButtonConfirm();
+          setHover(false);
           for (const missionRef of ref.current) {
             missionRef.setPhase("assigned");
             missionRef.setColor(myColor);

@@ -1,7 +1,11 @@
 import { useCallback } from "react";
 import { useGame } from "./useGame";
 import { SpringRef } from "@react-spring/three";
-import { AddButtonCallbackStyleRef } from "../components/AddButton";
+import {
+  AddButtonCallbackStyleRef,
+  clickDistance,
+  idleDistance,
+} from "../components/AddButton";
 import { PlayAdd, PlayError } from "../data/audioFiles";
 
 export default function useAddRunner() {
@@ -13,16 +17,16 @@ export default function useAddRunner() {
       if (eurodollars >= 100) {
         PlayAdd();
         springAPI.start({
-          from: { color: "#ffff00", zDistance: 0.01 },
-          to: { color: "#ffffff", zDistance: 0.06 },
+          from: { color: "#ffff00", zDistance: clickDistance },
+          to: { color: "#ffffff", zDistance: idleDistance },
         });
 
         addRunner(true);
       } else {
         PlayError();
         springAPI.start({
-          from: { color: "#ff0000", zDistance: 0.01 },
-          to: { color: "#ffffff", zDistance: 0.06 },
+          from: { color: "#ff0000", zDistance: clickDistance },
+          to: { color: "#ffffff", zDistance: idleDistance },
         });
       }
     },
