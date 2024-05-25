@@ -9,7 +9,7 @@ const missionComplete = new Audio("/audio/Completed.ogg");
 const missionFailed = new Audio("/audio/Fail.ogg");
 const Error = new Audio("/audio/Error.ogg");
 const Add = new Audio("/audio/Add.ogg");
-const Bass = new Audio("/audio/Intro.ogg");
+const Bass = new Audio("/audio/Intro2.ogg");
 const LoadingTech = new Audio("/audio/LoadingTech.ogg");
 const LoadingTyping = new Audio("/audio/LoadingTyping.ogg");
 
