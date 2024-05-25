@@ -11,8 +11,6 @@ import {
   StopLoadingSounds,
 } from "../../data/audioFiles";
 import { useGame } from "../../hooks/useGame";
-import { BLUE } from "../../data/theme";
-
 const animate = async () => {
   PlayLoadingTyping();
 
