@@ -2,7 +2,7 @@ import { a, animated, useSpring } from "@react-spring/three";
 import { Float, Text, useTexture } from "@react-three/drei";
 import { DoubleSide, PlaneGeometry } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { ThreeEvent, useThree } from "@react-three/fiber";
 import { DEFAULT_BUTTON_BG } from "../data/theme";
 import {
@@ -11,23 +11,17 @@ import {
   PlayButtonSelect,
 } from "../data/audioFiles";
 import { FONT_DESCRIPTION_BOLD } from "../data/fonts";
-import {
-  MissionDifficulty,
-  getMissionDifficulty,
-  getMissionReward,
-} from "../data/economy";
-import { useGame } from "../hooks/useGame";
+import { MissionData } from "../hooks/useGame";
+import { MissionDifficulty } from "../data/economy";
 
 export type MissionRef = {
-  mission: string;
-  difficulty: MissionDifficulty;
-  reward: number;
+  mission: MissionData;
   setPhase: React.Dispatch<React.SetStateAction<MissionPhase>>;
   setColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type MissionButtonProps = {
-  mission: string;
+  mission: MissionData;
   style: ButtonAnimationStyles;
 };
 
@@ -48,17 +42,6 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
   ({ style, mission }, ref) => {
     const [phase, setPhase] = useState<MissionPhase>("idle");
     const [color, setColor] = useState<string>(DEFAULT_BUTTON_BG);
-    const payMission = useGame((state) => state.payMission);
-
-    const difficulty = useRef(getMissionDifficulty());
-
-    const reward = useRef(
-      getMissionReward(useGame.getState().eurodollars, difficulty.current),
-    );
-
-    useEffect(() => {
-      payMission();
-    }, []);
 
     const size = useThree((state) => state.size);
     const amount = Math.min((size.width / size.height) * 0.5, 1);
@@ -114,8 +97,6 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
             if (ref && typeof ref !== "function" && ref.current) {
               ref.current.push({
                 mission,
-                difficulty: difficulty.current,
-                reward: reward.current,
                 setColor,
                 setPhase,
               });
@@ -155,7 +136,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
             color={color}
             depthWrite={false}
             map={
-              difficulty.current === MissionDifficulty.Easy
+              mission.difficulty === MissionDifficulty.Easy
                 ? baseTextureEasy
                 : baseTextureHard
             }
@@ -234,7 +215,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
             fontWeight={3000}
           >
             <a.meshBasicMaterial color={"white"} opacity={style.opacity} />
-            {mission}
+            {mission.name}
           </AText>
         </a.mesh>
       </a.group>

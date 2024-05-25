@@ -17,7 +17,7 @@ export default function useAddMission() {
           to: { color: "#ffffff", zDistance: 0.06 },
         });
 
-        addMission();
+        addMission(true);
       } else {
         PlayError();
         springAPI.start({

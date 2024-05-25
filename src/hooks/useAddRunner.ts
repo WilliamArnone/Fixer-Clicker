@@ -17,7 +17,7 @@ export default function useAddRunner() {
           to: { color: "#ffffff", zDistance: 0.06 },
         });
 
-        addRunner();
+        addRunner(true);
       } else {
         PlayError();
         springAPI.start({

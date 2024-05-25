@@ -9,6 +9,8 @@ import GameHeader from "./GameHeader";
 
 export default function PhaseGame() {
   const [phase, setPhase] = useGame((state) => [state.phase, state.setPhase]);
+  const addMission = useGame((state) => state.addMission);
+  const addRunner = useGame((state) => state.addRunner);
 
   useEffect(() => {
     if (phase === "intro") {
@@ -23,6 +25,11 @@ export default function PhaseGame() {
       /**
        * GAME
        */
+      addMission(false);
+      addMission(false);
+      addMission(false);
+      addRunner(false);
+      addRunner(false);
       PlaySong();
     }
   }, [phase]);

@@ -3,9 +3,20 @@ import { missionNames } from "../data/missionNames";
 import { randInt } from "three/src/math/MathUtils.js";
 import { RunnerData, characters } from "../data/characters";
 import { PlayMissionFailed } from "../data/audioFiles";
-import { getMissionPrice } from "../data/economy";
+import {
+  MissionDifficulty,
+  getMissionDifficulty,
+  getMissionPrice,
+  getMissionReward,
+} from "../data/economy";
 
 type GamePhase = "loading" | "intro" | "game";
+
+export type MissionData = {
+  name: string;
+  reward: number;
+  difficulty: MissionDifficulty;
+};
 
 interface GameState {
   phase: GamePhase;
@@ -13,26 +24,25 @@ interface GameState {
   runnerPool: RunnerData[];
   runners: RunnerData[];
   missionPool: string[];
-  missions: string[];
+  missions: MissionData[];
   glitch: boolean;
   glitchTimeout: number;
 }
 
 interface GameAction {
   setPhase: (newPhase: GamePhase) => void;
-  addRunner: () => RunnerData;
+  addRunner: (pay: boolean) => RunnerData;
   removeRunner: (runner: RunnerData) => void;
-  addMission: () => string;
-  payMission: () => void;
-  removeMission: (mission: string, reward: number) => void;
+  addMission: (pay: boolean) => MissionData;
+  removeMission: (mission: MissionData) => void;
   triggerGlitch: () => void;
 }
 
 const createNewAvalableRunner = (runners: RunnerData[]) =>
   characters.filter((runner) => runners.findIndex((r) => r === runner) === -1);
-const createNewAvalableMissions = (missions: string[]) =>
+const createNewAvalableMissions = (missions: MissionData[]) =>
   missionNames.filter(
-    (mission) => missions.findIndex((m) => m === mission) === -1,
+    (mission) => missions.findIndex((m) => m.name === mission) === -1,
   );
 
 export const useGame = create<GameState & GameAction>((set) => ({
@@ -46,7 +56,7 @@ export const useGame = create<GameState & GameAction>((set) => ({
 
   setPhase: (newPhase: GamePhase) => set(() => ({ phase: newPhase })),
 
-  addRunner: () => {
+  addRunner: (pay: boolean) => {
     let newRunner: RunnerData = null!;
 
     set((state) => {
@@ -65,7 +75,8 @@ export const useGame = create<GameState & GameAction>((set) => ({
       return {
         runners: [...state.runners, newRunner],
         runnerPool: newPool,
-        eurodollars: state.eurodollars - 100,
+        eurodollars:
+          state.eurodollars - (pay ? getMissionPrice(state.eurodollars) : 0),
       };
     });
 
@@ -77,8 +88,8 @@ export const useGame = create<GameState & GameAction>((set) => ({
       runners: state.runners.filter((r) => r !== runner),
     })),
 
-  addMission: () => {
-    let newMission: string = null!;
+  addMission: (pay: boolean) => {
+    let newMission: MissionData = null!;
 
     set((state) => {
       //if all the missions are active do nothing
@@ -91,29 +102,33 @@ export const useGame = create<GameState & GameAction>((set) => ({
           : state.missionPool;
 
       const missionIndex = randInt(0, newPool.length - 1);
-      (newMission = newPool[missionIndex]), newPool.splice(missionIndex, 1);
+      newMission = {
+        name: newPool[missionIndex],
+        difficulty: getMissionDifficulty(),
+        reward: 0,
+      };
+      newMission.reward = getMissionReward(
+        state.eurodollars,
+        newMission.difficulty,
+      );
+
+      newPool.splice(missionIndex, 1);
 
       return {
         missions: [...state.missions, newMission],
         missionPool: newPool,
+        eurodollars:
+          state.eurodollars - (pay ? getMissionPrice(state.eurodollars) : 0),
       };
     });
 
     return newMission;
   },
 
-  payMission: () => {
-    set((state) => {
-      return {
-        eurodollars: state.eurodollars - getMissionPrice(state.eurodollars),
-      };
-    });
-  },
-
-  removeMission: (mission, reward) =>
+  removeMission: (mission) =>
     set((state) => ({
       missions: state.missions.filter((miss) => miss !== mission),
-      eurodollars: state.eurodollars + reward,
+      eurodollars: state.eurodollars + mission.reward,
     })),
 
   glitchTimeout: -1,
