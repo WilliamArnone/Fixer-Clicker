@@ -26,12 +26,28 @@ export default function Game() {
   return (
     <>
       <MyCamera>
-        <Suspense>{phase === "idle" && <PhaseLoading />}</Suspense>
-        <Suspense>{phase === "loading" && <PhaseLoading />}</Suspense>
+        {phase === "idle" && (
+          <Suspense>
+            <PhaseLoading />
+          </Suspense>
+        )}
+        {phase === "loading" && (
+          <Suspense>
+            <PhaseLoading />
+          </Suspense>
+        )}
       </MyCamera>
 
-      <Suspense>{phase === "intro" && <PhaseIntro />}</Suspense>
-      <Suspense>{phase === "game" && <PhaseGame />}</Suspense>
+      {phase === "intro" && (
+        <Suspense>
+          <PhaseIntro />
+        </Suspense>
+      )}
+      {phase === "game" && (
+        <Suspense>
+          <PhaseGame />
+        </Suspense>
+      )}
 
       <MatrixCity
         model="city1"
