@@ -93,7 +93,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
         const missions = [...myMissions];
         const missionRef = missions[0];
 
-        if (getIsDead(missionRef.difficulty)) {
+        if (getIsDead(missionRef.mission.difficulty)) {
           triggerGlitch();
 
           for (const ref of missions) {
@@ -110,7 +110,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
         } else {
           missions.splice(0, 1);
 
-          removeMission(missionRef.mission, missionRef.reward);
+          removeMission(missionRef.mission);
           PlayMissionCompleted();
 
           if (missions.length === 0) setPhase("idle");

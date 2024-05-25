@@ -10,7 +10,7 @@ import {
   getMissionReward,
 } from "../data/economy";
 
-type GamePhase = "loading" | "intro" | "game";
+type GamePhase = "idle" | "loading" | "intro" | "game";
 
 export type MissionData = {
   name: string;
@@ -46,7 +46,7 @@ const createNewAvalableMissions = (missions: MissionData[]) =>
   );
 
 export const useGame = create<GameState & GameAction>((set) => ({
-  phase: "loading",
+  phase: "idle",
   eurodollars: 500,
   runnerPool: [...characters],
   runners: [],

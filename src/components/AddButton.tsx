@@ -25,9 +25,6 @@ useTexture.preload("/img/Generic/AddButtonOverlay.png");
 export default function AddButton({ callback, ...props }: AddButtonProps) {
   const baseTexture = useTexture("/img/Generic/AddButtonBase.png");
   const overlayTexture = useTexture("/img/Generic/AddButtonOverlay.png");
-
-  console.log("Add button re rendered");
-
   const [spring, api] = useSpring(() => ({
     from: { opacity: 0, color: "#ffffff", zDistance: 0.06 },
   }));

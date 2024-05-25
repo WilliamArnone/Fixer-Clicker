@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MatrixMaterial } from "../materials/MatrixMaterial";
 import { useGLTF } from "@react-three/drei";
 import { Mesh } from "three";
@@ -22,31 +22,31 @@ export default function MatrixCity({
   model: keyof typeof CITIES;
   color: string;
 }) {
-  const materialRef = useRef<MatrixMaterial>(null);
-  const materialSpeedRef = useRef<number>(18);
-  const glitch = useGame((state) => state.glitch);
   const phase = useGame((state) => state.phase);
-  const cityModel = useGLTF(CITIES[model]);
 
+  const speed = useRef<number>(0);
+
+  const materialRef = useRef<MatrixMaterial>(null);
+
+  const cityModel = useGLTF(CITIES[model]);
   const geometry =
     cityModel.scene.children[0] instanceof Mesh &&
     cityModel.scene.children[0].geometry;
-  /**
-   * UPDATE
-   */
+
+  useEffect(() => {
+    if (phase === "intro") speed.current = 18;
+  }, [phase]);
+
   useFrame((_, delta) => {
-    if (phase === "loading") return;
-
     let speedTarget = 0;
+    const glitch = useGame.getState().glitch;
 
-    if (phase === "game") speedTarget = glitch ? 50 : 0.6;
+    if (phase === "intro" || phase === "game") speedTarget = glitch ? 50 : 0.6;
 
-    materialSpeedRef.current +=
-      (speedTarget - materialSpeedRef.current) * delta * 0.5;
+    speed.current += (speedTarget - speed.current) * delta * 0.5;
 
     if (materialRef.current)
-      materialRef.current.uniforms.uTime.value +=
-        delta * materialSpeedRef.current;
+      materialRef.current.uniforms.uTime.value += delta * speed.current;
   });
 
   return (
