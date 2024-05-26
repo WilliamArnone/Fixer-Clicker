@@ -50,11 +50,7 @@ export default function Game() {
         </Suspense>
       )}
 
-      <MatrixCity
-        model="city1"
-        rotation-x={-Math.PI * 0.5 * 0}
-        position-y={0}
-      />
+      <MatrixCity model="city1" rotation-x={-Math.PI * 0.5 * 0} />
     </>
   );
 }

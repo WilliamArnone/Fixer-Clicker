@@ -39,7 +39,7 @@ export default function MatrixCity({
 
   useEffect(() => {
     if (phase === "intro") {
-      speed.current = 18;
+      speed.current = 30;
       materialRef.current.uniforms.uTime.value;
     }
   }, [phase]);
@@ -50,7 +50,7 @@ export default function MatrixCity({
 
     if (phase === "intro" || phase === "game") speedTarget = glitch ? 50 : 0.6;
 
-    speed.current += (speedTarget - speed.current) * delta * 0.5;
+    speed.current += (speedTarget - speed.current) * Math.min(delta * 1.4, 1);
 
     materialRef.current.uniforms.uTime.value += delta * speed.current;
   });

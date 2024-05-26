@@ -4,6 +4,7 @@ import RunnerList from "../RunnerList";
 import { MissionRef } from "../MissionButton";
 import useResponsiveness from "../../hooks/useResponsiveness";
 import GameHeader from "../GameHeader";
+import GameOverScreen from "../GameOverScreen";
 
 export default function PhaseGame() {
   const selectedMissions = useRef<MissionRef[]>([]);
@@ -14,7 +15,7 @@ export default function PhaseGame() {
   const [scaleRatio, deltaPosition] = useResponsiveness();
 
   return (
-    <group rotation-x={-0.2} scale={scaleRatio} position-y={3.4}>
+    <group rotation-x={-0.55} scale={scaleRatio} position-y={4.9}>
       <Suspense>
         <GameHeader deltaPosition={deltaPosition} />
       </Suspense>
@@ -30,6 +31,8 @@ export default function PhaseGame() {
         name="Runners"
         ref={selectedMissions}
       />
+
+      <GameOverScreen />
     </group>
   );
 }

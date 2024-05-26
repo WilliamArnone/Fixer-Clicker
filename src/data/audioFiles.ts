@@ -42,7 +42,8 @@ song.volume = 0.2;
 export const PlaySong = () => {
   song.play();
   song.addEventListener("timeupdate", function () {
-    var buffer = 0.44;
+    //var buffer = 0.44;
+    var buffer = 0.22;
     if (song.currentTime > this.duration - buffer) {
       this.currentTime = 0;
       this.play();

@@ -109,8 +109,13 @@ export default function PhaseIdle() {
           className="text-sm lg:w-max lg:text-md bg-zinc-800 flex flex-col p-5 rounded-md space-y-11"
         >
           <div className="flex flex-col space-y-5 max-h-96 overflow-y-scroll p-5">
-            <h2 className="self-center text-md md:text-lg mb-4 font-bold">
-              MUSIC & SFXs
+            <h2 className="self-center text-md md:text-lg mt-4 mb-4 font-bold">
+              FIXER CLICKER
+            </h2>
+            <span>A useless site/clicker game made by William Arnone</span>
+
+            <h2 className="self-center text-md md:text-lg mt-4 mb-4 font-bold">
+              Music & SFXs
             </h2>
             <span>
               The Hidden One by DavidKBD - Pink Bloom Pack --

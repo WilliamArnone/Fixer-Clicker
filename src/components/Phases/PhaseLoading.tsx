@@ -19,7 +19,7 @@ const animate = async () => {
   PlayLoadingTech();
   PlayLoadingTyping();
 
-  await new Promise((resolve) => setTimeout(resolve, 7500));
+  await new Promise((resolve) => setTimeout(resolve, 7900));
 
   StopLoadingSounds();
 

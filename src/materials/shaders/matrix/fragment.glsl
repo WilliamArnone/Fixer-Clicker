@@ -31,7 +31,7 @@ void main(){
 
 	//FRESNEL
 	float fresnel = smoothstep(0.4, 1.0, 1.0 - abs(dot(cameraDIr, normal)));
-	fresnel = pow(fresnel, 3.0);
+	fresnel = pow(fresnel, 2.0);
 	fresnel = clamp(fresnel, 0.0, 1.8);
 
 
