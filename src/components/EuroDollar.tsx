@@ -14,8 +14,10 @@ function EuroDollarsToLabel(eurodollars: number) {
   if (eurodollars < 1000) return eurodollars.toString();
   else if (eurodollars < 1000000)
     return `${numberWithSpacesFloat(Math.floor(eurodollars / 100) / 10)}K`;
+  else if (eurodollars < 1000000000)
+    return `${numberWithSpacesFloat(Math.floor(eurodollars / 100000) / 10)}M`;
   else
-    return `${numberWithSpacesFloat(Math.floor(eurodollars / 100000) / 10)}B`;
+    return `${numberWithSpacesFloat(Math.floor(eurodollars / 100000000) / 10)}B`;
 }
 
 export default function EuroDollar(
