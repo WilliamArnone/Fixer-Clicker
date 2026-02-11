@@ -103,7 +103,7 @@ export default function GameOverScreen() {
             <a.meshBasicMaterial
               transparent
               depthWrite={false}
-              map={baseTexture}
+              map={baseTexture as any}
               opacity={groupStyle.opacity}
             />
           </mesh>
@@ -119,7 +119,7 @@ export default function GameOverScreen() {
               <a.meshBasicMaterial
                 transparent
                 depthWrite={false}
-                map={buttonTexture}
+                map={buttonTexture as any}
                 opacity={groupStyle.opacity}
                 color={buttonStyle.color}
               />

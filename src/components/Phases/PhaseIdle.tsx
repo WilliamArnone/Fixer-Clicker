@@ -181,7 +181,7 @@ export default function PhaseIdle() {
         >
           <a.meshBasicMaterial
             transparent
-            map={enterTexture}
+            map={enterTexture as any}
             color={spring.color}
             opacity={spring.opacity}
           />

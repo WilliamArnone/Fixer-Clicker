@@ -199,7 +199,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
             transparent
             color={myColor}
             opacity={style.opacity}
-            map={baseTexture}
+            map={baseTexture as any}
           />
 
           <Float rotationIntensity={0} speed={3} floatingRange={[0, 0.2]}>
@@ -212,7 +212,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                 transparent
                 color={myColor}
                 opacity={style.opacity}
-                map={overlayTopTexture}
+                map={overlayTopTexture as any}
                 depthWrite={false}
               />
             </a.mesh>
@@ -229,7 +229,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                 color={myColor}
                 opacity={style.opacity}
                 depthWrite={false}
-                map={overlayBottomTexture}
+                map={overlayBottomTexture as any}
               />
 
               {phase !== "dying" && phase !== "active" && (
@@ -294,7 +294,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                 color={myColor}
                 opacity={style.opacity}
                 depthWrite={false}
-                map={overlayCornerTexture}
+                map={overlayCornerTexture as any}
               />
             </a.mesh>
           </Float>
@@ -310,7 +310,7 @@ const RunnerButton = forwardRef<MissionRef[], RunnerButtonProps>(
                 transparent
                 color={myColor}
                 opacity={style.opacity}
-                map={overlayCornerTexture}
+                map={overlayCornerTexture as any}
               />
             </a.mesh>
           </Float>

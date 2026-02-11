@@ -1,6 +1,6 @@
 import { a, animated, useSpring } from "@react-spring/three";
 import { Float, Text, useCursor, useTexture } from "@react-three/drei";
-import { DoubleSide, Mesh, PlaneGeometry } from "three";
+import { DoubleSide, Mesh, PlaneGeometry, Texture } from "three";
 import { ButtonAnimationStyles } from "../hooks/useButtonAnimation";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
@@ -79,6 +79,9 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
     const overlayCornerTexture = useTexture("/img/Mission/OverlayCorner.png");
     const overlayAimTexture = useTexture("/img/Mission/OverlayAim.png");
 
+    const baseMissionTexture : Texture = mission.difficulty === MissionDifficulty.Easy
+                ? baseTextureEasy
+                : baseTextureHard;
     /**
      * EVENT HANDLERS
      */
@@ -164,11 +167,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
             opacity={style.opacity}
             color={color}
             depthWrite={false}
-            map={
-              mission.difficulty === MissionDifficulty.Easy
-                ? baseTextureEasy
-                : baseTextureHard
-            }
+            map={baseMissionTexture as any}
           />
 
           <Float rotationIntensity={0} speed={3} floatingRange={[0, 0.2]}>
@@ -183,7 +182,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
                 opacity={style.opacity}
                 color={color}
                 depthWrite={false}
-                map={overlayCornerTexture}
+                map={overlayCornerTexture as any}
               />
             </a.mesh>
           </Float>
@@ -201,7 +200,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
                 opacity={style.opacity}
                 color={color}
                 depthWrite={false}
-                map={overlayCornerTexture}
+                map={overlayCornerTexture as any}
               />
             </a.mesh>
           </Float>
@@ -220,7 +219,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
               depthWrite={false}
               opacity={style.opacity}
               color={color}
-              map={overlayAimTexture}
+              map={overlayAimTexture as any}
             />
             <a.mesh
               geometry={overlayAimGeometry}
@@ -235,7 +234,7 @@ const MissionButton = forwardRef<MissionRef[], MissionButtonProps>(
                 depthWrite={false}
                 opacity={style.opacity}
                 color={color}
-                map={overlayAimTexture}
+                map={overlayAimTexture as any}
               />
             </a.mesh>
           </a.mesh>

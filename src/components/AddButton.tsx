@@ -70,7 +70,7 @@ export default function AddButton({ callback, ...props }: AddButtonProps) {
           transparent
           depthWrite={false}
           color={spring.color}
-          map={baseTexture}
+          map={baseTexture as any}
           opacity={spring.opacity}
         ></a.meshBasicMaterial>
       </mesh>
@@ -79,7 +79,7 @@ export default function AddButton({ callback, ...props }: AddButtonProps) {
           transparent
           depthWrite={false}
           color={spring.color}
-          map={overlayTexture}
+          map={overlayTexture as any}
         ></a.meshBasicMaterial>
       </a.mesh>
     </group>
